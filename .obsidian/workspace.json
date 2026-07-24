@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "knowlegdes/rust/rust_fundamentals.md",
+                "file": "knowlegdes/cpp/OOP.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "rust_fundamentals"
+              "title": "OOP"
             }
           }
         ]
@@ -195,8 +195,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "a51687d492fb0549",
+  "active": "596d132279452fe0",
   "lastOpenFiles": [
+    "knowlegdes/cpp/cpp_fundamentals.md",
+    "knowlegdes/cpp/OOP.md",
+    "knowlegdes/rust/rust_fundamentals.md",
+    "knowlegdes/cpp",
+    "knowlegdes/未命名.md",
+    "projects/rcore",
     "projects/mit6.s081",
     "projects",
     "knowlegdes/rust/meet_cargo.md",
@@ -205,7 +211,6 @@
     "未命名.base",
     "未命名 2.base",
     "未命名 1.base",
-    "knowlegdes/rust/rust_fundamentals.md",
     "knowlegdes/rust",
     "knowlegdes/linux",
     "knowlegdes"
