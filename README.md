@@ -1,6 +1,6 @@
 # system_programming_note
 
-本人学习系统编程的笔记
+本人学习系统编程的笔记。笔记软件是Obli
 
 ## 项目目录
 
