@@ -445,6 +445,7 @@ let y = x；
 - 元组，当且仅当其包含的类型也都是 `Copy` 的时候。比如，`(i32, i32)` 是 `Copy` 的，但 `(i32, String)` 就不是
 - 不可变引用 `&T` ，例如[转移所有权](https://beatai.org/rust-course/basic/ownership/ownership#%E8%BD%AC%E7%A7%BB%E6%89%80%E6%9C%89%E6%9D%83)中的最后一个例子，**但是注意：可变引用** `**&mut T**` **是不可以 Copy的**
 
+
 ### 函数传值与返回
 
 ```

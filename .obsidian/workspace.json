@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "knowlegde/rust/rust_fundamentals.md",
+                "file": "knowlegdes/rust/rust_fundamentals.md",
                 "mode": "source",
                 "source": false
               },
@@ -180,7 +180,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -194,15 +195,19 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "596d132279452fe0",
+  "active": "a51687d492fb0549",
   "lastOpenFiles": [
-    "knowlegde/linux/未命名.md",
-    "knowlegde/rust/rust_fundamentals.md",
+    "projects/mit6.s081",
+    "projects",
+    "knowlegdes/rust/meet_cargo.md",
+    "knowlegdes/linux/未命名.md",
     "README.md",
-    "knowlegde/rust",
-    "knowlegde/linux",
-    "knowlegde",
     "未命名.base",
-    "未命名 1.base"
+    "未命名 2.base",
+    "未命名 1.base",
+    "knowlegdes/rust/rust_fundamentals.md",
+    "knowlegdes/rust",
+    "knowlegdes/linux",
+    "knowlegdes"
   ]
 }
