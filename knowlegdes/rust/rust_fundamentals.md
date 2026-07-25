@@ -908,5 +908,21 @@ user1.username = String::from("xxx");
 
 
 ```rust
-fn build_user(email: String, username: String, active: bool, sign_in_count: u64)
+fn build_user(email: String, username: String)-> User{
+	User {
+		email: email,
+		username: username, //同名变量赋值允许简为一个“username”
+		active: true,
+		sign_in_count: 1,
+	}
+}
 ```
+可以用编写构造函数的方式简化结构体的创建
+
+```rust
+let user2 = User{
+	email: String::from("xxx@example"),
+	..user1,
+}
+```
+`..` 语法表明凡是我们没有显式声明的字段，全部从 `user1` 中自动获取。需要注意的是 `..user1` 必须在结构体的尾部使用。
