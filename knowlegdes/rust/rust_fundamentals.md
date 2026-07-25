@@ -784,3 +784,14 @@ println!("{}",result);
 右侧的字符串可以有多个，且必须是字符串切片类型。
 
 
+```
+let s1 = String::from("hello");
+let s2 = String::from(", rust!");
+let s = format!("{} {}!", s1, s2});
+println("{}",s);
+```
+相当于格式化输入输出
+
+
+### 字符串转义
+和其他语言一样使用\进行转义，使用\ \bao c
