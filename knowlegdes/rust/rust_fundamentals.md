@@ -879,5 +879,26 @@ let z = tup2.2;
 
 ## 结构体
 ```rust
-strucr
+struct User{
+	active : bool,
+	username : String,
+	email: String,
+	sign_in_count: u64,
+}
 ```
+一个结构体由几部分组成：
+- 通过关键字 `struct` 定义
+- 一个清晰明确的结构体 `名称`
+- 几个有名字的结构体 `字段`
+
+```rust
+let mut user1 = User{
+	email: String::from("someone@example.com"),
+	username: String::from("someome_username"),
+	active: true,
+	sign_in_count: 1,
+}
+
+user1.username = String::from("xxx");
+```
+必须要将结构体实例声明为可变的，才能修改其中的字段
