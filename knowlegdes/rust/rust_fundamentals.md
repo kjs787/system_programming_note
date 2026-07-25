@@ -902,3 +902,11 @@ let mut user1 = User{
 user1.username = String::from("xxx");
 ```
 必须要将结构体实例声明为可变的，才能修改其中的字段
+- 初始化实例时，**每个字段**都需要进行初始化
+- 初始化时的字段顺序**不需要**和结构体定义时的顺序一致
+- 使用 . 访问结构体成员
+
+
+```rust
+fn build_user(email: String, username: String, active: bool, sign_in_count: u64)
+```
