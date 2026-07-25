@@ -74,8 +74,7 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -181,8 +180,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -196,7 +194,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5dd91ec42210d5c1",
+  "active": "a51687d492fb0549",
   "lastOpenFiles": [
     "未命名 2.base",
     "knowlegdes/rust/rust_fundamentals.md",
