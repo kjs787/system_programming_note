@@ -760,7 +760,7 @@ string_remove.remove(0);
 
 **该方法是直接操作原来的字符串**，原变量必须是可变变量
 
-truncate()：
+**truncate()：**
 
 ```
 let mut string_truncate = String::from("");
@@ -770,3 +770,12 @@ string_truncate.truncate(3);
 删除字符串中从指定位置开始到结尾的全部字符
 
 **方法是直接操作原来的字符串**，原变量必须是可变变量
+
+clear():
+```
+let mut string_clear = String::from("string clear");
+string_clear.clear();
+```
+清空字符串的所有字符
+
+**该方法是直接操作原来的字符串**，原变量必须是可变变量
