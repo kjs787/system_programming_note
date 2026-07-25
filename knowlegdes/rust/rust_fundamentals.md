@@ -772,7 +772,7 @@ string_clear.clear();
 
 #### 连接：Concatenate
 
-```
+```rust
 let string_append = String::from("hello ");
 let string_rust = String::from("rust");
 let result = string_append + &string_rust;
@@ -854,4 +854,6 @@ for b in "中国人".bytes(){
 使用标准库不能直接在UTF-8字符串中获得子串，可以尝试使用utf8_slice获取UTF-8子串。
 
 
+
+## 元组
  
