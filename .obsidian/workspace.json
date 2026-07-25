@@ -180,7 +180,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -194,7 +195,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "a51687d492fb0549",
+  "active": "5dd91ec42210d5c1",
   "lastOpenFiles": [
     "未命名 2.base",
     "knowlegdes/rust/rust_fundamentals.md",
