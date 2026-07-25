@@ -843,4 +843,15 @@ for c in "中国人".chars(){
 使用chars()方法，可以通过Unicode字符的方式遍历字符串。
 
 
+```rust
+for b in "中国人".bytes(){
+	println!("{}", b);
+}
+```
+返回字节数组
+
+
+使用标准库不能直接在UTF-8字符串中获得子串，可以尝试使用utf8_slice获取UTF-8子串。
+
+
  
