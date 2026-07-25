@@ -773,6 +773,14 @@ string_clear.clear();
 #### 连接：Concatenate
 
 ```
-
+let string_append = String::from("hello ");
+let string_rust = String::from("rust");
+let result = string_append + &string_rust;
+let mut result = result + "!";
+result += "!!!"
+println!("{}",result);
 ```
-使用 + 或 += 可以连接字符串
+使用 + 或 += 可以连接字符串，**第一个字符串的所有权会被转移给新变量**，相当于对最左侧的字符串变量调用add方法。
+右侧的字符串可以有多个，且必须是字符串切片类型。
+
+
