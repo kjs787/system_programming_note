@@ -938,6 +938,10 @@ let user2 = User{
 
 ### 元组结构体
 ```rust
-struct point(i32, i32, i32);
-let origin
+struct Point(i32, i32, i32);
+let origin = Point(0, 0, 0);
 ```
+不关心结构体成员的名称，又想让结构体有整体名称时使用。
+
+
+### 单元结构体
