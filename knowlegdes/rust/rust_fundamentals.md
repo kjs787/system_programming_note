@@ -933,6 +933,5 @@ let user2 = User{
 
 
 ### 结构体内存排布
-![[Pasted image 20260725162408.png]]
 
 

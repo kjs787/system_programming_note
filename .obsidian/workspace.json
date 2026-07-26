@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "knowlegdes/rust/rust_fundamentals.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "rust_fundamentals"
             }
           }
         ]
@@ -196,6 +196,7 @@
   },
   "active": "5dd91ec42210d5c1",
   "lastOpenFiles": [
+    "README.md",
     "knowlegdes/rust/rust_fundamentals.md",
     "knowlegdes/rust/meet_cargo.md",
     "engineering_practice",
@@ -207,7 +208,6 @@
     "未命名 1.base",
     "未命名.base",
     "knowlegdes/cpp/OOP.md",
-    "README.md",
     "knowlegdes/linux/未命名.md",
     "knowlegdes/cpp/STL.md",
     "knowlegdes/cpp/cpp_fundamentals.md",
