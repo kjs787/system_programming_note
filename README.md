@@ -4,21 +4,21 @@
 
 
 ## 项目目录
-~/Projects/system_programming_note
-├── engineering_practice
-├── knowlegdes
-│   ├── cpp
-│   │   ├── cpp_fundamentals.md
-│   │   ├── OOP.md
-│   │   └── STL.md
-│   ├── operating_sysytem
-│   │   └── OSTEP
-│   └── rust
-│       ├── meet_cargo.md
-│       └── rust_fundamentals.md
-├── LICENSE
-├── Pasted image 20260725162408.png
-└── README.md
+- system_programming_note
+  - engineering_practice
+  - knowlegdes
+    - cpp
+      - cpp_fundamentals.md
+      - OOP.md
+      - STL.md
+    - operating_sysytem
+      - OSTEP
+    - rust
+      - meet_cargo.md
+      - rust_fundamentals.md
+  - LICENSE
+  - Pasted image 20260725162408.png
+  - README.md
 
 
 ## 正在做的事
