@@ -945,3 +945,7 @@ let origin = Point(0, 0, 0);
 
 
 ### 单元结构体
+```rust
+struct MyUnitStruct；
+```
+单元结构体不包含任何字段，但十分有用。
