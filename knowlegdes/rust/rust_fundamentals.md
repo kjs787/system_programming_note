@@ -929,9 +929,15 @@ let user2 = User{
 使用结构体user1创建一个结构体user2，但email成员单独初始化
 结构体更新语法：`..` 语法表明凡是我们没有显式声明的字段，全部从 `user1` 中自动获取。需要注意的是 `..user1` 必须在结构体的尾部使用。
 
-注意user1的username成员的所有权被转移到user2的成员中来，而其他成员（activate， sign_in_count）具有Copy特征，只做了复制。user1的email在本次赋值中没有使用，自然没有所有权的转移。
+注意：user1的username成员的所有权被转移到user2的成员中来，而其他成员（activate， sign_in_count）具有Copy特征，只做了复制。user1的email在本次赋值中没有使用，自然没有所有权的转移。
 
 
 ### 结构体内存排布
+![[Pasted image 20260726090246.png]]
 
 
+### 元组结构体
+```rust
+struct point(i32, i32, i32);
+let origin
+```
