@@ -195,11 +195,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5dd91ec42210d5c1",
+  "active": "a51687d492fb0549",
   "lastOpenFiles": [
+    "knowlegdes/operating_sysytem/OSTEP",
+    "knowlegdes/operating_sysytem/未命名.md",
+    "knowlegdes/rust/rust_fundamentals.md",
+    "knowlegdes/operating_sysytem",
     "Pasted image 20260725162408.png",
     "未命名 2.base",
-    "knowlegdes/rust/rust_fundamentals.md",
     "未命名 1.base",
     "未命名.base",
     "knowlegdes/cpp/OOP.md",
@@ -214,7 +217,6 @@
     "projects/mit6.s081",
     "projects",
     "knowlegdes/rust",
-    "knowlegdes/linux",
-    "knowlegdes"
+    "knowlegdes/linux"
   ]
 }
