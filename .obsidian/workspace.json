@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "knowlegdes/rust/rust_fundamentals.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "rust_fundamentals"
+              "title": "README"
             }
           }
         ]
@@ -195,11 +195,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "a51687d492fb0549",
+  "active": "5dd91ec42210d5c1",
   "lastOpenFiles": [
+    "knowlegdes/rust/rust_fundamentals.md",
+    "knowlegdes/rust/meet_cargo.md",
+    "engineering_practice",
     "knowlegdes/operating_sysytem/OSTEP",
     "knowlegdes/operating_sysytem/未命名.md",
-    "knowlegdes/rust/rust_fundamentals.md",
     "knowlegdes/operating_sysytem",
     "Pasted image 20260725162408.png",
     "未命名 2.base",
@@ -207,7 +209,6 @@
     "未命名.base",
     "knowlegdes/cpp/OOP.md",
     "README.md",
-    "knowlegdes/rust/meet_cargo.md",
     "knowlegdes/linux/未命名.md",
     "knowlegdes/cpp/STL.md",
     "knowlegdes/cpp/cpp_fundamentals.md",
@@ -215,8 +216,6 @@
     "knowlegdes/未命名.md",
     "projects/rcore",
     "projects/mit6.s081",
-    "projects",
-    "knowlegdes/rust",
-    "knowlegdes/linux"
+    "projects"
   ]
 }
