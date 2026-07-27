@@ -1059,6 +1059,8 @@ fn main() {
 
 
 ### Option表达空值
+空值的错误访问显然会yi
+
 ```rust
 enum Option<T> {
 	some(T),
@@ -1071,5 +1073,20 @@ let absent_number = Option<i32> = None;
 some是任意类型的，而None需要指定类型，目的是告诉编译器some<T> 是什么类型。
 
 ```rust
+let x: i8 = 5;
+let y: Option<i8> = Some(5);
 
+let sum = x + y;
 ```
+
+```shell
+error[E0277]: the trait bound `i8: std::ops::Add<std::option::Option<i8>>` is
+not satisfied
+ -->
+  |
+5 |     let sum = x + y;
+  |                 ^ no implementation for `i8 + std::option::Option<i8>`
+  |
+```
+这种情况显然会报错，i8 和 Option<i8> 不是相同的类型，不能直接相加。
+在对 `Option<T>` 进行 `T` 的运算之前必须将其转换为 `T`
