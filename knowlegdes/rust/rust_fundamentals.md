@@ -1404,7 +1404,8 @@ else常用来做错误处理
 
 
 
-# 方法
+# 方法 Method
+
 ```rust
 //定义数据成员
 struct Rectangle {
@@ -1419,6 +1420,9 @@ impl Rectangle {
 }
 
 fn main() {
-	let rect1 = 
+	let rect1 = Rectangle { width: 30, height: 50};
+	println!("this area =  {}", rect1.area());
 }
 ```
+使用struct定义数据成员
+使用impl定义成员方法
