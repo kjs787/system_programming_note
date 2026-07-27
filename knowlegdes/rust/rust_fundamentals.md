@@ -1059,3 +1059,13 @@ fn main() {
 
 
 ### Option表达空值
+```rust
+enum Option<T> {
+	some(T),
+	None,
+}
+
+let absent_number = Option<i32> = None;
+```
+`Option` 枚举包含两个成员，一个成员表示含有值：`Some(T)`, 另一个表示没有值。
+some是任意类型的，而None需要指定类型
