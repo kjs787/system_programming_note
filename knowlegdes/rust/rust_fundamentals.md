@@ -1335,5 +1335,31 @@ let none = plus_one(None);
 对Option<T>进行模式匹配
 
 
+## 模式匹配经典场景
 
+```rust
+// Vec是动态数组
+let mut stack = Vec::new();
+
+// 向数组尾部插入元素
+stack.push(1);
+stack.push(2);
+stack.push(3);
+
+// stack.pop从数组尾部弹出元素
+while let Some(top) = stack.pop() {
+    println!("{}", top);
+}
+```
+`while let`条件匹配，只要匹配成立，就一直循环
+
+
+```rust
+let v = vec!['a', 'b', 'c'];
+
+for (index, value) in v.iter().enumerate() {
+    println!("{} is at index {}", value, index);
+}
+```
+for循环的条件是一种模式匹配
 
