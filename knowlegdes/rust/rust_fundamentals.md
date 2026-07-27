@@ -1241,6 +1241,27 @@ enum Direction {
 
 fn main() {
 	let dire = Direction::South;
-	
+	match dire {
+		Direction::East => println!("East");
+		Direction::North | Direction::South => {
+			println!("South or North");
+		},
+		_ => println!("West"),   //其他`情况
+	}
 }
 ```
+```rust
+match target {
+    模式1 => 表达式1,
+    模式2 => {
+        语句1;
+        语句2;
+        表达式2
+    },
+    _ => 表达式3
+}
+```
+有以下几点值得注意：
+- `match` 的匹配必须要穷举出所有可能，因此这里用 `_` 来代表未列出的所有可能性
+- `match` 的每一个分支都必须是一个表达式，且所有分支的表达式最终返回值的类型必须相同
+- **X | Y**，类似逻辑运算符 `或`，代表该分支可以匹配 `X` 也可以匹配 `Y`，只要满足一个即可
