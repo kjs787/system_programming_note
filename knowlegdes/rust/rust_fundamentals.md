@@ -1311,5 +1311,7 @@ if let some(3) = v {
 ## matches!宏
 ```rust
 let foo = 'f';
-assert!
+assert!(matches!(foo, 'A'..='Z' | 'a'..='z'));
 ```
+将表达式与模式进行匹配，返回匹配的结果。
+
