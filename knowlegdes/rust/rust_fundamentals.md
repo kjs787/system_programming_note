@@ -1246,7 +1246,7 @@ fn main() {
 		Direction::North | Direction::South => {
 			println!("South or North");
 		},
-		_ => println!("West"),   //其他`情况
+		_ => println!("West"),   //其他情况
 	}
 }
 ```
@@ -1258,7 +1258,8 @@ match target {
         语句2;
         表达式2
     },
-    _ => 表达式3
+    _ => ( ),  //返回单元类型， `_` 是通配符
+	other => ( )    //可以用other实现相同效果
 }
 ```
 有以下几点值得注意：
@@ -1290,7 +1291,7 @@ fn value_in_cents(coin: Coin) -> u8 {
         Coin::Nickel => 5,
         Coin::Dime => 10,
         Coin::Quarter(state) => {
-            println!("State quarter from {:?}!", state); //
+            println!("State quarter from {:?}!", state); //取出了绑定的值state
             25
         },
     }
