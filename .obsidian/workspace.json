@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "knowlegdes/rust/rust_fundamentals.md",
-                "mode": "source",
+                "file": "knowlegdes/cpp/cpp_fundamentals.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "rust_fundamentals"
+              "title": "cpp_fundamentals"
             }
           }
         ]
@@ -196,8 +196,8 @@
   },
   "active": "5dd91ec42210d5c1",
   "lastOpenFiles": [
-    "Pasted image 20260726090246.png",
     "knowlegdes/rust/rust_fundamentals.md",
+    "Pasted image 20260726090246.png",
     "README.md",
     "knowlegdes/rust/meet_cargo.md",
     "engineering_practice",
