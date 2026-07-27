@@ -1229,3 +1229,18 @@ loop无条件循环循环需要你手动break退出
 
 
 # 模式匹配
+
+## match匹配
+```rust
+enum Direction {
+	East,
+	West,
+	North,
+	South,
+}
+
+fn main() {
+	let dire = Direction::South;
+	
+}
+```
