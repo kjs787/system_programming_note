@@ -1015,3 +1015,25 @@ $ cargo run
 
 
 ## 枚举类型
+```rust
+#[driver(Debug)]
+enum PokerSuit {
+	Clubs,
+	Spades,
+	Diamonds,
+	Hearts,
+}
+
+fn main() {
+	//访问枚举
+	let heart = PokerSuit::Hearts; 
+	let diamond = PokerSuit::Diamonds;
+	
+	print_suit(heart);
+	print_suit(diamond);
+}
+
+fn print_suit(card: PokerSuit) {
+	println!("{:?}",card);
+}
+```
