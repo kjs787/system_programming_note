@@ -1187,5 +1187,16 @@ for item in &mut collection {
 
 
 ```rust
-
+let a = [4, 3, 2, 1];
+for (i, v) in a.iter().enumerate() {
+	println!("第{}个元素是{}", i + 1, v);
+}
 ```
+使用迭代器遍历的方式获取数组索引
+
+```rust
+for _ in 0..=10 {
+}
+```
+只使用循环，不使用变量来控制流程
+
