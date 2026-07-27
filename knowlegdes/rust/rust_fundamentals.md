@@ -1309,3 +1309,7 @@ if let some(3) = v {
 `if let`匹配是当你只需要匹配一个条件，而忽略其他情况时使用。
 
 ## matches!宏
+```rust
+let foo = 'f';
+assert!
+```
