@@ -1068,4 +1068,5 @@ enum Option<T> {
 let absent_number = Option<i32> = None;
 ```
 `Option` 枚举包含两个成员，一个成员表示含有值：`Some(T)`, 另一个表示没有值。
-some是任意类型的，而None需要指定类型
+some是任意类型的，而None需要指定类型，目的是告诉编译器some<T> 是什么类型。
+
