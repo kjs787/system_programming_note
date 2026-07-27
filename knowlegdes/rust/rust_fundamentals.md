@@ -1143,7 +1143,7 @@ assert_eq!(slice, &[2, 3]);
 
 # 流程控制
 
-## if
+## if判断
 ```rust
 let condition = 1;
 let number = if condition == 1 {
@@ -1158,3 +1158,13 @@ let number = if condition == 1 {
 `if 用来赋值时，其各分支的返回值类型应该相同
 使用`else if`处理多重条件
 
+
+## for循环
+```rust
+for i in 1..=5 {
+	println!("{}", i);
+}
+```
+...txt
+
+```
