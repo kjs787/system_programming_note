@@ -1424,5 +1424,15 @@ fn main() {
 	println!("this area =  {}", rect1.area());
 }
 ```
-使用struct定义数据成员
-使用impl定义成员方法
+rust和其他面向对象语言定义对象的区别是，rust对象的`数据`和`方法`是分开定义的
+- 使用`struct`定义数据成员
+- 使用`impl`定义成员方法
+
+需要注意的是，`self` 依然有所有权的概念：
+
+- `self` 表示 `Rectangle` 的所有权转移到该方法中，这种形式用的较少
+- `&self` 表示该方法对 `Rectangle` 的不可变借用
+- `&mut self` 表示可变借用
+
+
+
