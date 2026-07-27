@@ -1145,11 +1145,15 @@ assert_eq!(slice, &[2, 3]);
 
 ## if
 ```rust
-let condition = true;
-let number = if condition {
+let condition = 1;
+let number = if condition == 1 {
         5
-    } else {
+    } else if condition == 0 {
         6
+    } else {
+		7
     };
 ```
-**`if` 语句块是表达式**，这里我们使用 `if` 表达式的返回值来给b liang进行赋值
+**`if` 语句块是表达式**，其返回值可以给变量赋值
+`if 用来赋值时，其各分支的返回值类型应该相同
+`else if`
