@@ -1165,6 +1165,27 @@ for i in 1..=5 {
 	println!("{}", i);
 }
 ```
-...txt
+```txt
+for 元素 in 集合 {
+	逻辑处理
+} 
+```
+集合往往使用引用类型，除非它具有`Copy`特征
+
+```rust
+for item in &mut collection {
+  // ...
+}
+```
+如果想在循环中，**修改该元素**，可以使用 `mut` 关键字
+
+|使用方法|等价使用方式|所有权|
+|---|---|---|
+|`for item in collection`|`for item in IntoIterator::into_iter(collection)`|转移所有权|
+|`for item in &collection`|`for item in collection.iter()`|不可变借用|
+|`for item in &mut collection`|`for item in collection.iter_mut()`|可变借用|
+
+
+```rust
 
 ```
