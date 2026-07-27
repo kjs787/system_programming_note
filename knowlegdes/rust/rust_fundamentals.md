@@ -1436,7 +1436,7 @@ rust和其他面向对象语言定义对象的区别是，rust对象的`数据`�
 - `&mut self` 表示可变借用
 
 
-## 模块
+## 模块Mod
 ```rust
 mod my {
 	pub struct Rectangle {
@@ -1450,8 +1450,18 @@ mod my {
 		}
 
 		pub fn width(&self) -> u32 {
+			return self.width;
 		} 
+
+		pub fn height(&self) -> u32 {
+			return self.height;
+		}
 	}
 }
 ```
+在模块外部访问结构体，只能访问 `pub` 关键字修饰的数据和方法。
+mod的引入更能体现封装特性
+
+
+
 
