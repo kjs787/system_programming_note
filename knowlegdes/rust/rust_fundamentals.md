@@ -1301,4 +1301,11 @@ fn value_in_cents(coin: Coin) -> u8 {
 
 
 ## if let 匹配
+```rust
+if let some(3) = v {
+	println!("three");
+}
+```
+`if let`匹配是当你只需要匹配一个条件，而忽略其他情况时使用。
 
+## matches!宏
