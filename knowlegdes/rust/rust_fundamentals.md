@@ -1298,3 +1298,7 @@ fn value_in_cents(coin: Coin) -> u8 {
 }
 ```
 可以通过模式绑定在模式匹配的过程中取出绑定的值。
+
+
+## if let 匹配
+
