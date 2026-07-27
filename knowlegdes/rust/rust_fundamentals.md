@@ -1406,6 +1406,7 @@ else常用来做错误处理
 
 # 方法 Method
 
+## 定义方法
 ```rust
 //定义数据成员
 struct Rectangle {
@@ -1435,4 +1436,22 @@ rust和其他面向对象语言定义对象的区别是，rust对象的`数据`�
 - `&mut self` 表示可变借用
 
 
+## 模块
+```rust
+mod my {
+	pub struct Rectangle {
+		width: u32,
+		pub heightL u32,
+	}
+
+	impl Rectangle {
+		pub fn new(width: u32, height: u32) -> Self {
+			Rectangle {width, height}
+		}
+
+		pub fn width(&self) -> u32 {
+		} 
+	}
+}
+```
 
