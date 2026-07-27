@@ -961,8 +961,6 @@ struct MyUnitStruct；
 
 
 ### 打印结构体
-结构体是不能直接格式化输出的，你需要为其实现 Display 特征。
-或者先添加 Debug 特征，再指定输出格式。
 
 ```rust
 #[driver(Debug)]
@@ -973,7 +971,15 @@ struct Rectangle {
 
 fn main() {
 	let rect1 = Rectangle {
-		width
-	}
+		width: 30,
+		height: 50,
+	};
+	
+	println!("rect1 is {:?}", rect1);
+	println!("rect1 is {:#?}", rect1); //以结构体创建的格式输出
 }
 ```
+结构体是不能直接格式化输出的，你需要为其实现 Display 特征。
+或者先添加 Debug 特征，再指定输出格式。
+
+
