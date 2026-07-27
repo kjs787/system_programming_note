@@ -1117,5 +1117,11 @@ rust中的Vector是可变长数组。**动态数组 `Vector` 是存储在堆上*
     let second = a[1]; // 获取第二个元素
 ```
 下标访问数组元素，索引从0开始
-越界访问会崩溃退出
+越界访问会崩溃退出，这体现rust的安全特征，在大多系统编程语言中，不会进行越界检查。
 
+```rust
+let array: [String; 8] = std::array::from_fn(|_i| String::from("rust is good!"));
+
+println!("{:#?}", array);
+```
+对于复杂类型的重复定义，使用
