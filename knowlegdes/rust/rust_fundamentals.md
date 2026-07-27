@@ -1363,3 +1363,45 @@ for (index, value) in v.iter().enumerate() {
 ```
 for循环的条件是一种模式匹配
 
+```rust
+fn print_coordinates(&(x, y): &(i32, i32)) {
+    println!("Current location: ({}, {})", x, y);
+}
+
+fn main() {
+    let point = (3, 5);
+    print_coordinates(&point);
+}
+```
+函数传值时的模式匹配
+
+```rust
+use std::str::FromStr;
+
+fn get_count_item(s: &str) -> (u64, &str) {
+    let mut it = s.split(' ');
+    let (Some(count_str), Some(item)) = (it.next(), it.next()) else {
+        panic!("Can't segment count item pair: '{s}'");
+    };
+    let Ok(count) = u64::from_str(count_str) else {
+        panic!("Can't parse integer: '{count_str}'");
+    };
+    // error: `else` clause of `let...else` does not diverge
+    // let Ok(count) = u64::from_str(count_str) else { 0 };
+    (count, item)
+}
+
+fn main() {
+    assert_eq!(get_count_item("3 chairs"), (3, "chairs"));
+}
+```
+`let-else`的模式匹配，它显然扩充了匹配后变量作用域
+else常用来做错误处理
+
+
+## 全模式列表
+常用模式匹配语法：https://beatai.org/rust-course/basic/match-pattern/all-patterns
+
+
+
+# 方法
