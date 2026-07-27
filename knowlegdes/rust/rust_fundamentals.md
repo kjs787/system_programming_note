@@ -1405,3 +1405,20 @@ else常用来做错误处理
 
 
 # 方法
+```rust
+//定义数据成员
+struct Rectangle {
+	width: u32,
+	height: u32,
+}
+//定义方法
+impl Rectangle {
+	fn area(&self) -> u32 {
+		self.width * self.height
+	}
+}
+
+fn main() {
+	let rect1 = 
+}
+```
