@@ -1025,7 +1025,7 @@ enum PokerSuit {
 }
 
 fn main() {
-	//访问枚举
+	//使用::访问枚举类型的某个成员
 	let heart = PokerSuit::Hearts; 
 	let diamond = PokerSuit::Diamonds;
 	
@@ -1037,3 +1037,21 @@ fn print_suit(card: PokerSuit) {
 	println!("{:?}",card);
 }
 ```
+枚举(enumeration)允许你通过列举可能的成员来定义一个**枚举类型**。
+以枚举类型作为参数的函数，可以接受枚举范围内不同类型的传值
+
+```rust
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+fn main() {
+    let m1 = Message::Quit;
+    let m2 = Message::Move{x:1,y:1};
+    let m3 = Message::ChangeColor(255,255,0);
+}
+```
+**任何类型的数据都可以放入枚举成员中**
