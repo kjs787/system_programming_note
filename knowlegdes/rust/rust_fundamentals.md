@@ -1332,4 +1332,8 @@ let five = Some(5);
 let six = plus_one(five);
 let none = plus_one(None);
 ```
-对Option<T>进行匹配，其实是对
+对Option<T>进行模式匹配
+
+
+
+
