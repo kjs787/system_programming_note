@@ -1776,4 +1776,9 @@ pub fn notify<T: Summary + Display>(item: &T) {}
 
 ```rust
 fn some_function<T, U>(t: &T, u: &U) -> i32
+	where T: Display + Clone,
+		U: Clone + Debug
+{}
 ```
+当特征约束很多时，使用where进行一些形式上的改进
+
