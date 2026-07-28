@@ -1576,4 +1576,25 @@ struct Point<T, U> {
 
 let p = Point{x: 1, y: 1.5, z: 3.14};
 ```
-使用
+结构体使用泛型要先声明，同种泛型的类型必须相同。
+
+
+
+### 枚举使用泛型
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+enum Result<T, E> {
+	Ok(T),
+	Err(E),
+}
+```
+Option是老朋友，用来确定一个变量是否有值
+Result表明返回的结果，正常返回Ok(T)，错误返回Err(T)
+
+
+
+### 方法中使用泛型
