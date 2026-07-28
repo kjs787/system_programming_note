@@ -1665,3 +1665,37 @@ fn main() {
 
 ### const fn常量函数
 
+```rust
+const fn add(a: usize, b: usize) -> usize {
+    a + b
+}
+
+const RESULT: usize = add(5, 10);
+
+fn main() {
+    println!("The result is: {}", RESULT);
+}
+```
+`const fn常量函数`在编译期就会被执行，并将结果内嵌到代码中，减少运行时性能消耗。
+- const fn 是有一定限制的，不可将随机数生成器写成 `const fn`
+- 不建议使 `数组长度 (arr.len())` 和 `Enum判别式` 依赖于浮点计算，const fn 可能得到不同结果
+
+```rust
+struct Buffer<const N: usize> {
+    data: [u8; N],
+}
+
+const fn compute_buffer_size(factor: usize) -> usize {
+    factor * 1024
+}
+
+fn main() {
+    const SIZE: usize = compute_buffer_size(4);
+    let buffer = Buffer::<SIZE> {
+        data: [0; SIZE],
+    };
+    println!("Buffer size: {} bytes", buffer.data.len());
+}
+```
+将 `const fn` 与 `const 泛型` 结合，可以实现更加灵活和高效的代码设计。
+例如，创建一个固定大小的缓冲区结构，其中缓冲区大小由编译期计算确定。
