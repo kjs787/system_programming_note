@@ -1614,6 +1614,16 @@ let p = Point{x: 1, y: 2};
 println!("x is {}", p.x());
 ```
 这里的Point<T>是一个完整的结构体类型而非泛型声明。
-这ji
+这几种泛型的定义是不一样的，互不冲突
+
+
+```rust
+impl Point<f32> {
+	fn distance(&self) -> f32 {
+		(self.x.powi(2) + self.y.powi(2)).sqrt()
+	}
+}
+```
+可以为某一具体的泛型实现方法
 
 
