@@ -1484,4 +1484,18 @@ let sq = Rectangle::new(3,3);
 特点是不传入&self作为参数，返回结构体类型
 
 
-一个结构体可以定义多个impl块，
+一个结构体可以定义多个impl块，做方法分类用。
+
+
+## 为枚举实现方法
+```rust
+#![allow(unused)]
+enum  Message {
+	Quit,
+	Move {x: i32, y: i32},
+	Write(String),
+	ChangeColor(i32, i32, i32),
+}
+
+impl Message
+```
