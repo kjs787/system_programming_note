@@ -1520,5 +1520,29 @@ fn add<T: std::ops::Add<output = T>>(a: T, b: T) -> T {
 	a + b
 }
 ```
+```rust
+fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> &T {
+    let mut largest = &list[0];
 
+    for item in list.iter() {
+        if item > largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let result = largest(&number_list);
+    println!("The largest number is {}", result);
+
+    let char_list = vec!['y', 'm', 'a', 'q'];
+
+    let result = largest(&char_list);
+    println!("The largest char is {}", result);
+```
+泛型`T`可以是任意类型，但不是所有类型都适用函数中的逻辑，需要对类型加以限制。
 
