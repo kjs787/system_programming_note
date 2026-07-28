@@ -1604,8 +1604,16 @@ struct Point<T> {
 	y: T,
 }
 
-impl 
+impl<T> Point<T> {
+	fn get_x(&self) -> &T {
+		&self.x
+	}
+}
 
+let p = Point{x: 1, y: 2};
+println!("x is {}", p.x());
 ```
+这里的Point<T>是一个完整的结构体类型而非泛型声明。
+这ji
 
 
