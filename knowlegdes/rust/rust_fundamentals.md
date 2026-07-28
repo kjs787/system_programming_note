@@ -1709,6 +1709,7 @@ fn main() {
 
 ## Trait特征
 
+### 特征的定义与实现
 ```rust
 pub trait Summary {
 	//只进行方法声明
@@ -1721,6 +1722,7 @@ pub struct Post {
 	pub content: String;
 }
 
+//为 `Post` 类型实现 `Summary` 特征
 impl Summary for Post {
 	fn summarize(&self) -> String {
 		format!("文章{}，作者是{}", self.title, self.author);
@@ -1728,4 +1730,19 @@ impl Summary for Post {
 }
 ```
 特征定义了**一组可以被共享的行为，只要实现了特征，你就能使用这组行为**。
-特征内仅对方法进行声明，在
+特征与其实现是分开的，特征内仅对行为进行声明，在外对特定类型实现该行为。
+
+
+### 孤儿规则
+**如果你想要为类型** `A` **实现特征** `T`**，那么** `A` **或者** `T` **至少有一个是在当前作用域中定义的！**
+确保不同人写的代码不会相互破坏
+
+
+### 默认实现
+```rust
+
+
+```
+
+
+
