@@ -1497,5 +1497,23 @@ enum  Message {
 	ChangeColor(i32, i32, i32),
 }
 
-impl Message
+impl Message {
+	fn main(&self) {
+		//定义方法体
+	}
+}
+
+fn main() {
+	let m = Message::Write(String::from("hello"));
+	m.call();
+}
 ```
+可以为枚举类型定义方法
+
+
+
+# 泛型和特征
+
+## 泛型Generics
+
+
