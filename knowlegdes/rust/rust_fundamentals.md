@@ -1709,6 +1709,23 @@ fn main() {
 
 ## Trait特征
 
+```rust
+pub trait Summary {
+	//只进行方法声明
+	fn summrize(&self) -> String;
+}
 
+pub struct Post {
+	pub title: String,
+	pub author: String.
+	pub content: String;
+}
+
+impl Summary for Post {
+	fn summarize(&self) -> String {
+		format!("文章{}，作者是{}", self.title, self.author);
+	}
+}
+```
 特征定义了**一组可以被共享的行为，只要实现了特征，你就能使用这组行为**。
-
+特征内仅对方法进行声明，在
