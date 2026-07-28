@@ -1750,4 +1750,12 @@ pub trait Summary {
 默认实现允许**调用相同特征中的其他方法**，哪怕这些方法没有默认实现。
 
 
+### 特征作为函数参数
+```rust
+pub fn notify(item: &impl Summary) {
+	println!("The great new`s summary is {}", item.summarize());
+}
+```
+所有实现了Summary特征的类型都可以作为该函数的参数
+
 
