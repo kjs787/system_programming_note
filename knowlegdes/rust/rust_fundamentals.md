@@ -1545,4 +1545,18 @@ fn main() {
     println!("The largest char is {}", result);
 ```
 泛型`T`可以是任意类型，但不是所有类型都适用函数中的逻辑，需要对类型加以限制。
+使用`Trait`特征 对T进行限制 （上例：std::cmp::PartialOrd>）
 
+
+```rust
+use std::fmt::Display;
+
+fn create_and_print<T>() where T: From<i32> + Display {
+	let a: T = 100.into();
+	println!("a is {}", a);
+}
+
+fn main() {
+	create_and_print()
+}
+```
