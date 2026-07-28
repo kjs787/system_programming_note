@@ -1515,5 +1515,10 @@ fn main() {
 # 泛型和特征
 
 ## 泛型Generics
+```rust
+fn add<T: std::ops::Add<output = T>>(a: T, b: T) -> T {
+	a + b
+}
+```
 
 
