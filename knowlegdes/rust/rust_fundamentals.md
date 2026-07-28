@@ -1757,13 +1757,23 @@ pub fn notify(item: &impl Summary) {
 }
 ```
 特征作为函数参数是很强大的功能
-所有实现了Summary特征的类型都可以作为该函数的参数，在函数内可以调用Summary特征的方法。
+所有实现了Summary特征的类型（可以是不同类型）都可以作为该函数的参数，在函数内可以调用Summary特征的方法。
 
 
 
 ### 特征约束
 ```rust
-pub fn notify<T: Summary>(item1: &T, )
+pub fn notify<T: Summary>(item1: &T, item2, &T) {
+}
 ```
+泛型类型 `T` 说明了 `item1` 和 `item2` 必须拥有同样的类型，同时 `T: Summary` 说明了 `T` 必须实现 `Summary` 特征。
+
+```rust
+pub fn notify<T: Summary + Display>(item: &T) {}
+```
+多重约束，要求泛型T即实现了Summary特征还实现了Dispaly特征。
 
 
+```rust
+fn some_function<T, U>(t: &T, u: &U) -> i32
+```
