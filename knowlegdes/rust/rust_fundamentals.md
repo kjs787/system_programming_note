@@ -1598,3 +1598,14 @@ Result表明返回的结果，正常返回Ok(T)，错误返回Err(T)
 
 
 ### 方法中使用泛型
+```rust
+struct Point<T> {
+	x: T,
+	y: T,
+}
+
+impl 
+
+```
+
+
