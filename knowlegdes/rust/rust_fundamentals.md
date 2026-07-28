@@ -1480,6 +1480,8 @@ impl Rectangle {
 
 let sq = Rectangle::new(3,3);
 ```
-类似yu
+与cpp中的构造函数相似，是rust结构体的构造器，方法名为`new`
+特点是不传入&self作为参数，返回结构体类型
 
 
+一个结构体可以定义多个impl块，
