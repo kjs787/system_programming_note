@@ -1515,6 +1515,8 @@ fn main() {
 # 泛型和特征
 
 ## 泛型Generics
+
+### 函数中使用泛型
 ```rust
 fn add<T: std::ops::Add<output = T>>(a: T, b: T) -> T {
 	a + b
@@ -1557,6 +1559,21 @@ fn create_and_print<T>() where T: From<i32> + Display {
 }
 
 fn main() {
-	create_and_print()
+	create_and_print::<i64>();
 }
 ```
+有时，编译器不能确定泛型的类型，需要手动指定
+
+
+
+### 结构体使用泛型
+```rust
+struct Point<T, U> {
+	x: T,
+	y: U,
+	z: U,
+}
+
+let p = Point{x: 1, y: 1.5, z: 3.14};
+```
+使用
