@@ -1464,7 +1464,22 @@ mod的引入更能体现封装特性
 
 
 
+## 关联函数
+```rust
+struct Rectangle {
+	width: u32,
+	height: u32,
+}
 
+impl Rectangle {
+	//定义关联函数
+	fn new(w: u32, h: u32) -> Rectangle {
+		Rectangle {width: w, height: h}
+	}
+}
 
+let sq = Rectangle::new(3,3);
+```
+类似yu
 
 
