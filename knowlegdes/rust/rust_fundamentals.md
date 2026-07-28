@@ -1631,3 +1631,15 @@ impl Point<f32> {
 ### const泛型
 
 ```rust
+fn dispaly_array<T: std::fmt::Debug, const N: usize>(arr: [T; N]) {
+	println!("{:?}", arr);
+}
+
+fn main() {
+	let arr: [i32; 3] = [1, 2, 3];
+	display_arrray(arr);
+}
+```
+const泛型是针对值的泛型，让rust便于进行操作数组长度。
+
+
