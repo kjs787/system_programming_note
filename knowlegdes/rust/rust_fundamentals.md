@@ -1756,6 +1756,14 @@ pub fn notify(item: &impl Summary) {
 	println!("The great new`s summary is {}", item.summarize());
 }
 ```
-所有实现了Summary特征的类型都可以作为该函数的参数
+特征作为函数参数是很强大的功能
+所有实现了Summary特征的类型都可以作为该函数的参数，在函数内可以调用Summary特征的方法。
+
+
+
+### 特征约束
+```rust
+pub fn notify<T: Summary>(item1: &T, )
+```
 
 
