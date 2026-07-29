@@ -1841,9 +1841,12 @@ fn reurn_summarizable() -> impl Summary {
 
 
 
+### 通过driver派生特征
+
+使用如 `#[derive(Debug)]`进行标记，被标记的类型自动实现对应特征，继承相应功能。
+`driver`派生的特征是 Rust 默认给我们提供的特征，可以自己手动重写该实现。
 
 
 
-
-
+### 调用方法时引入特征
 
