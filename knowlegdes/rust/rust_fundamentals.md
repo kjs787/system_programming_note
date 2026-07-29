@@ -1825,7 +1825,21 @@ impl<T: Display> ToString for T {
 
 
 ### 函数返回Impl Trait
-``` 妇女
+```rust
+fn reurn_summarizable() -> impl Summary {
+	Weibo {
+		username: String::from("sunface"),
+		content: String::from("xxx"),
+	}
+}
+```
+返回一个具有Summary特征的一个对象。
+这样做的好处是，如果返回的对象类型很复杂，你不需要写出他的所有类型。
+比如返回迭代器，所有迭代器都实现了`Iterator`特征。
+
+缺点是只能返回一个具体类型。
+
+
 
 
 
