@@ -1871,7 +1871,14 @@ fn main() {
 
 ## 特征对象
 ```rust
+trait Draw {
+	fn draw(&self) -> String;
+}
 
-
+impl Draw for u8 {
+	fn draw(&self) -> String {
+		format!("u8: {}", *self)
+	}
+}
 ```
 可以通过 `&` 引用或者 `Box<T>` 智能指针的方式来创建特征对象。
