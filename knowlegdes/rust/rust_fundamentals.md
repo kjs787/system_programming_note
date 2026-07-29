@@ -1782,3 +1782,11 @@ fn some_function<T, U>(t: &T, u: &U) -> i32
 ```
 当特征约束很多时，使用where进行一些形式上的改进
 
+
+### 利用特征约束有条件地实现方法或特征
+```rust
+use std::fmt::Display;
+
+struct Pair
+
+```
