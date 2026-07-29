@@ -1787,6 +1787,8 @@ fn some_function<T, U>(t: &T, u: &U) -> i32
 ```rust
 use std::fmt::Display;
 
-struct Pair
+struct Pair<T> {
+
+}
 
 ```
