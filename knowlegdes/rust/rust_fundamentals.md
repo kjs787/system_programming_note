@@ -1870,6 +1870,8 @@ fn main() {
 
 
 ## 特征对象
+
+### 定义特征对象
 ```rust
 trait Draw {
 	fn draw(&self) -> String;
@@ -1899,3 +1901,21 @@ fn main() {
 - `draw1` 函数的参数是 `Box<dyn Draw>` 形式的特征对象，该特征对象是通过 `Box::new(x)` 的方式创建的
 - `draw2` 函数的参数是 `&dyn Draw` 形式的特征对象，该特征对象是通过 `&x` 的方式创建的
 - `dyn` 关键字只用在特征对象的类型声明上，在创建时无需使用 `dyn`
+
+
+```rust
+pub struct Screen {
+	pub components: Vec<Box<dyn Draw>>,
+}
+```
+定义一个`Screen`结构体，存储一个动态数组，数组中的成员类型为`Draw`
+
+
+```rust
+impl Screen {
+	pub fn run(&self) {
+		for component in self.components
+	}
+}
+```
+
