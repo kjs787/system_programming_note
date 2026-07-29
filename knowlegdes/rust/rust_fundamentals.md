@@ -1849,4 +1849,20 @@ fn reurn_summarizable() -> impl Summary {
 
 
 ### 调用方法时引入特征
+```rust
+use std::convert::TryInto;
 
+fn main() {
+  let a: i32 = 10;
+  let b: u16 = 100;
+
+  let b_ = b.try_into()
+            .unwrap();
+
+  if a < b_ {
+    println!("Ten is less than one hundred.");
+  }
+}
+```
+在代码中调用了try_into()方法，他来自std::convert::TryInto特征，**那么你需要将该特征引入当前的作用域中**
+当然你可以把最常用的标准库中的特征通过 `std::prelude` 模块提前引入到当前作用域中
