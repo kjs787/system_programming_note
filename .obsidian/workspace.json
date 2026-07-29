@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "knowlegdes/rust/rust_fundamentals.md",
-                "mode": "preview",
+                "file": "knowlegdes/operating_sysytem/OSTEP/virtualizing.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "rust_fundamentals"
+              "title": "virtualizing"
             }
           }
         ]
@@ -196,15 +196,15 @@
   },
   "active": "6511951fbae790b9",
   "lastOpenFiles": [
+    "knowlegdes/operating_sysytem/linux/linux_basics/socket_programming.md",
+    "knowlegdes/operating_sysytem/linux/linux_basics/linux_system_programming.md",
+    "knowlegdes/rust/rust_fundamentals.md",
     "Pasted image 20260729110441.png",
     "Pasted image 20260729110415.png",
-    "knowlegdes/rust/rust_fundamentals.md",
     "knowlegdes/rust/meet_cargo.md",
     "knowlegdes/cpp/STL.md",
     "knowlegdes/cpp/OOP.md",
     "knowlegdes/cpp/cpp_fundamentals.md",
-    "knowlegdes/operating_sysytem/linux/linux_basics/socket_programming.md",
-    "knowlegdes/operating_sysytem/linux/linux_basics/linux_system_programming.md",
     "knowlegdes/operating_sysytem/linux/linux_basics",
     "knowlegdes/linux.md",
     "knowlegdes/operating_sysytem/linux/source_code_analysis",
