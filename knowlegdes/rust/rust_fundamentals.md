@@ -1880,5 +1880,22 @@ impl Draw for u8 {
 		format!("u8: {}", *self)
 	}
 }
+
+fn draw1(x: Box<dyn Draw>) {
+	x.draw();
+}
+
+fn draw2(x: &dyn Draw) {
+	x.draw();
+}
+
+fn main() {
+	let y = 8u8;
+	draw1(Box::new(x));
+	draw2(&x);
+}
 ```
 可以通过 `&` 引用或者 `Box<T>` 智能指针的方式来创建特征对象。
+- `draw1` 函数的参数是 `Box<dyn Draw>` 形式的特征对象，该特征对象是通过 `Box::new(x)` 的方式创建的
+- `draw2` 函数的参数是 `&dyn Draw` 形式的特征对象，该特征对象是通过 `&x` 的方式创建的
+- `dyn` 关键字只用在特征对象的类型声明上，在创建时无需使用 `dyn`
