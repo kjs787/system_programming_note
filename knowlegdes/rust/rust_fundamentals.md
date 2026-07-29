@@ -1812,11 +1812,20 @@ impl<T: Display + PartialOrd> Pair<T> {
 }
 ```
 对所有Pair<T>类型都定义new方法
-对jiu you
+对具有 Display + PartialOrd 特征的pair<T>类型定义cmp_display方法
+
+
+```rust
+impl<T: Display> ToString for T {
+
+}
+```
+对具有Display特征的类型实现特征
 
 
 
-
+### 函数返回Impl Trait
+``` 妇女
 
 
 
