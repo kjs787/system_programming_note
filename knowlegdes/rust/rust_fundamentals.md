@@ -1981,3 +1981,19 @@ self指向当前实例对象，Self指代特征或方法类型
 这体现了特征对象的抽象性，特征对象忽略了原本对象的类型，只关心是否实现了特征。
 
 
+
+### 关联类型
+```rust
+pub trait Iterator {
+	type Item;
+	fn next(&mut self) -> Option<Self::Item>;
+}
+
+impl Iterator for Counter {
+	type Item = u32;
+	fn next(&mut self) -> Option<self::Item> {
+		//snip
+	}
+}
+```
+关联类型是在特征中声明的类型，在其他类型进行实现，可以在特征中使用self::guan类型
