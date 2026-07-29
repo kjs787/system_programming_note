@@ -1908,14 +1908,36 @@ pub struct Screen {
 	pub components: Vec<Box<dyn Draw>>,
 }
 ```
-定义一个`Screen`结构体，存储一个动态数组，数组中的成员类型为`Draw`
+定义一个`Screen`结构体，存储一个动态数组，数组中的成员类型为实现了`Draw`特征的类型
 
 
 ```rust
 impl Screen {
 	pub fn run(&self) {
-		for component in self.components
+		for component in self.components.iter() {
+			component.draw();
+		}
 	}
 }
 ```
+为Screen定义run方法，遍历Vec数组
+
+
+```rust
+pub struct Screen<T: Draw> {
+	pub components: Vec<T>,
+}
+
+impl<T> Screen<T>
+	where T: Draw {
+	pub fn run(&self) {
+		for component in self.components.iter() {
+			component.draw();
+		}
+	}
+}
+```
+使用泛型实现，相较于特征对象有个qu di
+
+
 
