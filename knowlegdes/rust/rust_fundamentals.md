@@ -2371,3 +2371,7 @@ fn main() {
 	println!("{:?}", teams_map);
 }
 ```
+使用迭代器+collect的方式创建`HashMap`，into_iter方法把列表转化为迭代器，接着通过collect进行搜集。
+因为`collect`方法在内部实际上支持生成多种类型的目标集合，因此我们需要通过类型标注 `HashMap<_,_>` 来告诉编译器匹配的具体类型。
+
+
