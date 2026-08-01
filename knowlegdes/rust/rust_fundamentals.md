@@ -2095,4 +2095,6 @@ trait OutlinePrint: Display {
     }
 }
 ```
-在特征定义时，进行约束。当为某一类型实现OutlinePrint特征时，必须先为类型实现Display特征。
+在特征定义时，进行约束。上例当为某一类型实现OutlinePrint特征时，必须先为类型实现Display特征。因为OutlinePrint特征调用了Display特征的to_string()。
+
+
