@@ -2353,5 +2353,11 @@ my_gems.insert("红宝石", 1);
 my_gems.insert("蓝宝石", 2);
 my_gems.insert("石头", 3);
 ```
-HashMap就是其他语言的字典，存储`KV键值对`
+HashMap就是其他语言的字典，存储`KV键值对`，可以使用`new`来创建
 需要先引入HashMap，因为 `HashMap` 并没有包含在 Rust 的 `prelude` 中
+可以使用HashMap::with_capacity(capacity)来创建预知大小的hashMap，提升性能
+
+
+```rust
+
+```
