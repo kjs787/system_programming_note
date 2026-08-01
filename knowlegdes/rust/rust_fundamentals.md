@@ -2030,10 +2030,21 @@ impl Human {
     }
 }
 ```
+
 调用类型上的方法：
 ```rust
-
+let person  = Human;
+person.fly();
 ```
+
+调用特征上的方法：
+```rust
+let person = Human;
+Pilot::fly(&person);
+Wizard::fly(&person);
+```
+正因为有self参数，可以明确调用类型。如果是没有self参数的关联函数呢？就要使用完全限定语法。
+
 
 
 ### 完全限定语法
@@ -2065,3 +2076,6 @@ fn main() {
 <Type as Trait>::function(receiver_if_method, next_arg, ...);
 ```
 大多数情况，rust编译器能够自动推断出调用目标函数，只有当重名函数过多，编译器推断失败时，才会用该语法
+
+
+
