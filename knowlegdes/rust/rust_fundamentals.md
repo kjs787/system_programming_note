@@ -2139,8 +2139,14 @@ let third: &i32 = &v[2];
 println!("第三个元素是 {}", third);
 
 match v.get(2) {
-    Some(third) => println!("第三个元素是 {third}"),
+    Some(third) => println!("第三个元素是 {third}"),   //这是一种推荐的格式化输出写法
     None => println!("去你的第三个元素，根本没有！"),
 }
 ```
-第一种是下标访问，&v[2]以
+第一种是下标访问，&v[2]以引用的形式获取数组元素
+第二种是使用 .get(pos)方法，它返回Option<T>因此需要使用match进行模式匹配
+毫无疑问，下标访问会比 .get()方法访问速度快，而
+
+
+
+
