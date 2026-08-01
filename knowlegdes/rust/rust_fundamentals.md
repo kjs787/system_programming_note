@@ -2119,7 +2119,28 @@ let v: Vec<i32> = Vec::new();
 let mut v = Vec::new();
 v.push(1);
 ```
-使用Vec::new()是不能自动推断出元素类型的，需要xian s
-使用 `Vec::with_capacity(capacity)` 创建已知大小的动态数组，提升性能。
+使用push可以想尾部添加一个元素
+可以使用 `Vec::with_capacity(capacity)` 创建已知大小的动态数组，提升性能。
 
 
+```rust
+let v  = vec![1,2,3];
+```
+可以使用宏来创建动态数组，能够在创建同时初始化数组元素
+当Vector被删除时，数组中的元素也会被删除
+
+
+
+### 获取数组元素
+```rust
+let v = vec![1, 2, 3, 4, 5];
+
+let third: &i32 = &v[2];
+println!("第三个元素是 {}", third);
+
+match v.get(2) {
+    Some(third) => println!("第三个元素是 {third}"),
+    None => println!("去你的第三个元素，根本没有！"),
+}
+```
+第一种是下标访问，&v[2]以
