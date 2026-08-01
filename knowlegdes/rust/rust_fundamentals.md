@@ -2340,3 +2340,16 @@ fn main() {
 ```
 对结构体以年龄降序排序
 实现 `Ord` 需要我们实现 `Ord`、`Eq`、`PartialEq`、`PartialOrd` 这些属性。需要确保你的结构体中所有的属性均实现了 `Ord` 相关特性，否则会发生编译错误。他会根据属性顺序进行依次比较。
+
+
+
+## HashMap
+### 创建HashMap
+```rust
+use std::collections::HashMap;
+
+let mut my_gems = HashMap::new();
+my_gems.insert("红宝石", 1);
+my_gems.insert("蓝宝石", 2);
+
+```
