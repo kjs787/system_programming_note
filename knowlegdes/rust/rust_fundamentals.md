@@ -2177,4 +2177,29 @@ for i in &mut v {
 ```
 
 
-### 存储不同类型的
+### 存储不同类型的元素
+```rust
+#[derive(Debug)]
+enum IpAddr {
+	V4(String),
+	V6(String)
+}
+
+fn main() {
+	let v = vec![
+		IpAddr::V4("127.0.0.1".to_string()),
+		IpAdrr::V6("::1".to_string())
+	];
+
+	for ip in v {
+		show_addr(ip);
+	}
+}
+
+fn show_addr(ip: IpAddr) {
+	println!("{:?}", ip);
+}
+```
+
+
+
