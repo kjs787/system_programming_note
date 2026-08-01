@@ -2000,6 +2000,26 @@ impl Iterator for Counter {
 他比泛型声明要来的简洁，声明一次多处调用。
 
 
+### 调用同名的方法
 
+```rust
+trait Animal {
+	fn baby_name() -> String;
+}
 
+struct Dog;
+
+impl Dog {
+	fn baby_name() -> String {
+		String::from("Spot")
+	}
+}
+
+impl Animal for Dog {
+	fn baby_name() -> String {
+		
+	}
+}
+
+```
 
