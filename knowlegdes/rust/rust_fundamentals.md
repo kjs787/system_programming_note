@@ -2079,3 +2079,20 @@ fn main() {
 
 
 
+### 特征定义中的特征约束
+```rust
+use std::fmt::Display;
+
+trait OutlinePrint: Display {
+    fn outline_print(&self) {
+        let output = self.to_string();
+        let len = output.len();
+        println!("{}", "*".repeat(len + 4));
+        println!("*{}*", " ".repeat(len + 2));
+        println!("* {} *", output);
+        println!("*{}*", " ".repeat(len + 2));
+        println!("{}", "*".repeat(len + 4));
+    }
+}
+```
+在特征定义时，进行约束。当为某一类型实现OutlinePrint特征时，必须先为类型实现Display特征。
