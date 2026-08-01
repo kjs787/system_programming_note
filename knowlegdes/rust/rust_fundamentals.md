@@ -2200,6 +2200,43 @@ fn show_addr(ip: IpAddr) {
 	println!("{:?}", ip);
 }
 ```
+通过**枚举类型**让动态数组存储不同类型。
 
+
+```rust
+trait IpAddr {
+    fn display(&self);
+}
+
+struct V4(String);
+impl IpAddr for V4 {
+    fn display(&self) {
+        println!("ipv4: {:?}",self.0)
+    }
+}
+struct V6(String);
+impl IpAddr for V6 {
+    fn display(&self) {
+        println!("ipv6: {:?}",self.0)
+    }
+}
+
+fn main() {
+    let v: Vec<Box<dyn IpAddr>> = vec![
+        Box::new(V4("127.0.0.1".to_string())),
+        Box::new(V6("::1".to_string())),
+    ];
+
+    for ip in v {
+        ip.display();
+    }
+}
+```
+通过**特征对象**来实现
+特征对象的形式用的比较多，因为特征对象更加灵活。
+
+
+
+### Vector常用方法
 
 
