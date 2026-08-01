@@ -2098,3 +2098,14 @@ trait OutlinePrint: Display {
 在特征定义时，进行约束。上例当为某一类型实现OutlinePrint特征时，必须先为类型实现Display特征。因为OutlinePrint特征调用了Display特征的to_string()。
 
 
+
+### newtype
+为了绕过孤儿规则引入`newtype`，就是为一个**元组结构体**创建新类型。该元组结构体封装有一个字段，该字段就是希望实现特征的具体类型。
+没有很明白newtype的意义，等之后再进行补充。
+
+
+
+
+# 集合类型
+
+## 动态数组 Vector
