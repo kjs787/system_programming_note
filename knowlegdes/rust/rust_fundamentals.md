@@ -2258,6 +2258,7 @@ v.shrink_to_fit();
 ```
 对Vector容量进行操作
 
+
 ```rust
 let mut v =  vec![1, 2];
 assert!(!v.is_empty());         // 检查 v 是否为空
@@ -2280,3 +2281,33 @@ let mut m: Vec<_> = v.drain(1..=3).collect();
 
 let v2 = m.split_off(1);        // 指定索引处切分成两个 vec, m: [22], v2: [33, 44]
 ```
+其他一些常用方法
+
+
+```rust
+let v = vec![11,22,33,44,55];
+let slice = &v[1..=3];
+```
+获取数组切片
+
+
+
+### 对Vector的排序
+
+```rust
+//整数排序
+let mut vec = vec![1, 5, 10, 2, 15];    
+vec.sort_unstable();    
+assert_eq!(vec, vec![1, 2, 5, 10, 15]);
+
+//浮点数排序
+
+let mut vec = vec![1.0, 5.6, 10.3, 2.0, 15f32];    
+vec.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());    
+assert_eq!(vec, vec![1.0, 2.0, 5.6, 10.3, 15f32]);
+
+```
+稳定的排序 `sort` 和 `sort_by`，以及非稳定排序 `sort_unstable` 和 `sort_unstable_by`。
+区别是稳定排序对相等元素不会重新排序，非稳定排序不保证这一点。
+`非稳定` 排序的算法的速度会优于 `稳定` 排序算法，同时，`稳定` 排序还会额外分配原数组一半的空间。
+
