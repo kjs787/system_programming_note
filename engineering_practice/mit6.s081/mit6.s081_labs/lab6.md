@@ -85,7 +85,6 @@ trap.c的处理cow逻辑
   
 
 vm.c
-
 copyout同样有将数据写入到其他物理地址的动作，和usertrap一样，要更改成cow的逻辑。
 
 ![](https://cdn.nlark.com/yuque/0/2026/png/63601471/1782298355330-df32e097-fe7e-4530-ad6d-baf92192b01a.png)
