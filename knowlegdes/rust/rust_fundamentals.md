@@ -2301,7 +2301,6 @@ vec.sort_unstable();
 assert_eq!(vec, vec![1, 2, 5, 10, 15]);
 
 //浮点数排序
-
 let mut vec = vec![1.0, 5.6, 10.3, 2.0, 15f32];    
 vec.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());    
 assert_eq!(vec, vec![1.0, 2.0, 5.6, 10.3, 15f32]);
@@ -2311,3 +2310,33 @@ assert_eq!(vec, vec![1.0, 2.0, 5.6, 10.3, 15f32]);
 区别是稳定排序对相等元素不会重新排序，非稳定排序不保证这一点。
 `非稳定` 排序的算法的速度会优于 `稳定` 排序算法，同时，`稳定` 排序还会额外分配原数组一半的空间。
 
+浮点数因为存在`NAN`值，不能实现权数值`Ord`特性。如果你能保证数组没有NAN，可以使用`partial_cmp`自定义比较排序。
+
+
+```rust
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: u32,
+}
+
+impl Person {
+    fn new(name: String, age: u32) -> Person {
+        Person { name, age }
+    }
+}
+
+fn main() {
+    let mut people = vec![
+        Person::new("Zoe".to_string(), 25),
+        Person::new("Al".to_string(), 60),
+        Person::new("John".to_string(), 1),
+    ];
+    // 定义一个按照年龄倒序排序的对比函数
+    people.sort_unstable_by(|a, b| b.age.cmp(&a.age));
+
+    println!("{:?}", people);
+}
+```
+对结构体以年龄降序排序
+实现 `Ord` 需要我们实现 `Ord`、`Eq`、`PartialEq`、`PartialOrd` 这些属性。需要确保你的结构体中所有的属性均实现了 `Ord` 相关特性，否则会发生编译错误。他会根据属性顺序进行依次比较。
