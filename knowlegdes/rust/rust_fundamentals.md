@@ -2158,6 +2158,6 @@ let first = &v[0];  //不可变借用
 
 v.push(6);    //可变借用
 
-println!("The first element is: {first}");  
+println!("The first element is: {first}");   //调用了前面的不可变借用
 ```
-
+这种情况会报错，因为你在可变借用的后面调用了前面的不可变借用。
