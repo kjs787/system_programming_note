@@ -2001,7 +2001,42 @@ impl Iterator for Counter {
 
 
 ### 调用同名的方法
+```rust
+trait Pilot {
+    fn fly(&self);
+}
 
+trait Wizard {
+    fn fly(&self);
+}
+
+struct Human;
+
+impl Pilot for Human {
+    fn fly(&self) {
+        println!("This is your captain speaking.");
+    }
+}
+
+impl Wizard for Human {
+    fn fly(&self) {
+        println!("Up!");
+    }
+}
+
+impl Human {
+    fn fly(&self) {
+        println!("*waving arms furiously*");
+    }
+}
+```
+调用类型上的方法：
+```rust
+
+```
+
+
+### 完全限定语法
 ```rust
 trait Animal {
 	fn baby_name() -> String;
@@ -2017,9 +2052,16 @@ impl Dog {
 
 impl Animal for Dog {
 	fn baby_name() -> String {
-		
+		String::from("puppy")
 	}
 }
 
+fn main() {
+	println!("The dog`s name is {}", <Dog as Animal>::baby_name());
+}
 ```
-
+其定义为：
+```rust
+<Type as Trait>::function(receiver_if_method, next_arg, ...);
+```
+大多数情况，rust编译器能够自动推断出调用目标函数，只有当重名函数过多，编译器推断失败时，才会用该语法
