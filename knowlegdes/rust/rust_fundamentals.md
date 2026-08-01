@@ -2119,3 +2119,7 @@ let v: Vec<i32> = Vec::new();
 let mut v = Vec::new();
 v.push(1);
 ```
+使用Vec::new()是不能自动推断出元素类型的，需要xian s
+使用 `Vec::with_capacity(capacity)` 创建已知大小的动态数组，提升性能。
+
+
