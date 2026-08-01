@@ -2109,3 +2109,13 @@ trait OutlinePrint: Display {
 # 集合类型
 
 ## 动态数组 Vector
+
+### 创建动态数组
+```rust
+//显示声明
+let v: Vec<i32> = Vec::new();
+
+//自动推导
+let mut v = Vec::new();
+v.push(1);
+```
