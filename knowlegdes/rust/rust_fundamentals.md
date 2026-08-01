@@ -2359,5 +2359,15 @@ HashMap就是其他语言的字典，存储`KV键值对`，可以使用`new`来�
 
 
 ```rust
-
+fn main() {
+	use std::collections::HashMap;
+	let teams_list = vec![
+		("china".to_string(), 100),
+		("US".to_string(), 200),
+		("jp".to_string(), 10)
+	];
+	
+	let teams_map: HashMap<_,_> = teams_list.into_iter().collect();
+	println!("{:?}", teams_map);
+}
 ```
