@@ -2145,8 +2145,19 @@ match v.get(2) {
 ```
 第一种是下标访问，&v[2]以引用的形式获取数组元素
 第二种是使用 .get(pos)方法，它返回Option<T>因此需要使用match进行模式匹配
-毫无疑问，下标访问会比 .get()方法访问速度快，而
+毫无疑问，下标访问会比 .get()方法访问速度快，而 .get()会进行越界检查，返回Option<T>，更安全
 
 
 
+### 同时借用多个数组元素
+
+```rust
+let mut v = vec![1, 2, 3, 4, 5];
+
+let first = &v[0];  //不可变借用
+
+v.push(6);    //可变借用
+
+println!("The first element is: {first}");  
+```
 
