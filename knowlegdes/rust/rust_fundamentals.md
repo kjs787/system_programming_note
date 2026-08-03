@@ -2467,3 +2467,18 @@ for word in text.split_whitespace() {
 
 
 ### 哈希函数
+若性能测试显示当前标准库默认的哈希函数不能满足你的性能需求，就需要去 [`crates.io`](https://crates.io) 上寻找其它的哈希函数实现，使用方法很简单：
+
+```rust
+use std::hash::BuildHasherDefault;
+use std::collections::HashMap;
+// 引入第三方的哈希函数
+use twox_hash::XxHash64;
+
+// 指定HashMap使用第三方的哈希函数XxHash64
+let mut hash: HashMap<_, _, BuildHasherDefault<XxHash64>> = Default::default();
+hash.insert(42, "the answer");
+assert_eq!(hash.get(&42), Some(&"the answer"));
+```
+
+目前`HashMap`使用的哈希函数为`SipHash`，它的性能不是很高，但是安全性很高。`SipHash` 在中等大小的 `Key` 上，性能相当不错，但是对于小型的 `Key` （例如整数）或者大型 `Key` （例如字符串）来说，性能还是不够好。若你需要极致性能，例如实现算法，可以考虑这个库：ahash
