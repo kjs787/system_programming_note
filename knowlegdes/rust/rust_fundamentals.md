@@ -2405,3 +2405,25 @@ fn main() {
 ```
 传递引用类型时，请确保该引用的生命周期至少和HashMap一样长。
 
+
+
+### 查询HashMap
+```rust
+use std::collections::HashMap;
+
+let mut scores = HashMap::new();
+
+scores.insert(String::from("Blue"), 10);
+scores.insert(String::from("Yellow"), 50);
+
+let team_name = String::from("Blue");
+let  score: Option<&i32> = scores.get(&team_name);
+```
+上面有几点需要注意：
+
+- `get` 方法返回一个 `Option<&i32>` 类型：当查询不到时，会返回一个 `None`，查询到时返回 `Some(&i32)`
+- `&i32` 是对 `HashMap` 中值的借用，如果不使用借用，可能会发生所有权的转移
+- `get` 方法的 `key` 参数必须是一个引用
+
+
+
