@@ -2385,7 +2385,7 @@ fn main() {
 	let mut boys = HashMap::new();
 	//name的所有权被转移了
 	boys.insert(name, age);
-	//再调用就会保存
+	//再调用就会报错
 	println!("name is {}", name); 
 }
 ```
@@ -2396,6 +2396,12 @@ fn main() {
 
 
 ```rust
-
-
+	let name = String::new("name");
+	let age = 18;
+	let mut boys = HashMap::new();
+	//将引用类型传递给HashMap
+	boys.insert(&name, age);
+	println!("name is {}", name); 
 ```
+传递引用类型时，请确保该引用的生命周期至少和HashMap一样长。
+
