@@ -2419,6 +2419,10 @@ scores.insert(String::from("Yellow"), 50);
 let team_name = String::from("Blue");
 let  score: Option<&i32> = scores.get(&team_name);
 ```
+
+```rust
+let score: i32 = scores.get(&team_name).copied().unwrap_or(0);
+```
 上面有几点需要注意：
 
 - `get` 方法返回一个 `Option<&i32>` 类型：当查询不到时，会返回一个 `None`，查询到时返回 `Some(&i32)`
@@ -2427,3 +2431,12 @@ let  score: Option<&i32> = scores.get(&team_name);
 
 
 
+### 更新HashMap的值
+```rust
+fn main() {
+	use::std::collections::HashMap;
+	
+	let mut scores = HashMap::new();
+	scores.insert("Blue", 10) 
+}
+```
