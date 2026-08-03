@@ -2382,6 +2382,20 @@ use std::collections:HashMap;
 fn main() {
 	let name = String::new("name");
 	let age = 18;
-	let mut boys = 
+	let mut boys = HashMap::new();
+	//name的所有权被转移了
+	boys.insert(name, age);
+	//再调用就会保存
+	println!("name is {}", name); 
 }
+```
+`HashMap` 的所有权规则与其它 Rust 类型没有区别：
+
+- 若类型实现 `Copy` 特征，该类型会被复制进 `HashMap`，因此无所谓所有权
+- 若没实现 `Copy` 特征，所有权将被转移给 `HashMap` 中
+
+
+```rust
+
+
 ```
