@@ -2450,6 +2450,20 @@ fn main() {
 
 ```rust
 use::std::collections::HashMap();
-let text = 
+let text = “hello world  hello great world”；
+let mut map = HashMap::new();
+//根据空格分割字符串
+for word in text.split_whitespace() {
+	let count = map.entry(word).or_insert(0);
+	*count += 1;
+}
 ```
 一种词频统计的例子
+有两点值得注意：
+
+- `or_insert` 返回了 `&mut v` 引用(值的引用)，因此可以通过该可变引用直接修改 `map` 中对应的值
+- 使用 `count` 引用时，需要先进行解引用 `*count`，否则会出现类型不匹配
+
+
+
+### 哈希函数
