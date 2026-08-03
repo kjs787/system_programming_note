@@ -2437,6 +2437,19 @@ fn main() {
 	use::std::collections::HashMap;
 	
 	let mut scores = HashMap::new();
-	scores.insert("Blue", 10) 
+	scores.insert("Blue", 10);
+	//覆盖已有的值
+	let old = socres.insert("Blue", 20);
+	//查询是否有值，没有就插入
+	let v = scores.entry("Yellow").or_insert(50);
 }
 ```
+一些更新值的情况
+
+
+
+```rust
+use::std::collections::HashMap();
+let text = 
+```
+一种词频统计的例子
