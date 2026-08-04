@@ -2807,3 +2807,39 @@ lib.rs
 创建一个库类型`Package`
 类型的 `Package` 只能作为三方库被其它项目引用，而不能独立运行
 如果一个 `Package` 包含有 `src/lib.rs`，意味它包含有一个库类型的同名包 `my-lib`，该包的根文件是 `src/lib.rs`。
+
+包和`Package`项目是容易混淆的。牢记 `Package` 是一个项目工程，而包只是一个编译单元，`src/main.rs` 和 `src/lib.rs` 都是编译单元，因此它们都是包。
+
+
+
+### 典型Package结构
+```rust
+.
+├── Cargo.toml
+├── Cargo.lock
+├── src
+│   ├── main.rs
+│   ├── lib.rs
+│   └── bin
+│       └── main1.rs
+│       └── main2.rs
+├── tests
+│   └── some_integration_tests.rs
+├── benches
+│   └── simple_bench.rs
+└── examples
+    └── simple_example.rs
+```
+- 唯一库包：`src/lib.rs`
+- 默认二进制包：`src/main.rs`，编译后生成的可执行文件与 `Package` 同名
+- 其余二进制包：`src/bin/main1.rs` 和 `src/bin/main2.rs`，它们会分别生成一个文件同名的二进制可执行文件
+- 集成测试文件：`tests` 目录下
+- 基准性能测试 `benchmark` 文件：`benches` 目录下
+- 项目示例：`examples` 目录下
+
+这种目录结构基本上是 Rust 的标准目录结构，在 `GitHub` 的大多数项目上，你都将看到它的身影。
+
+理解了包的概念，我们再来看看构成包的基本单元：模块。
+
+
+## 模块 Module
