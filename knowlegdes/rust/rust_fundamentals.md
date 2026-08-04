@@ -3033,3 +3033,16 @@ fn main() {
 在代码中直接引用想要的模块就行。
 
 ust 社区已经为我们贡献了大量高质量的第三方包，你可以在 `crates.io` 或者 `lib.rs` 中检索和使用，从目前来说查找包更推荐 `lib.rs`，搜索功能更强大，内容展示也更加合理，但是下载依赖包还是得用`crates.io`。
+总之，在使用外部包时，先看看他的操作文档。
+
+
+### 使用 `{}` 简化引入方式
+```rust
+//一次引入同一个包的不同模块
+use std::collections::{HashMap,BTreeMap,HashSet};
+use std::{cmp::Ordering, io};
+
+//同时引入包和里面的模块，self表示
+use std::io::{self, Write}; 
+```
+
