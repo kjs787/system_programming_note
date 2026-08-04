@@ -2957,7 +2957,7 @@ mod front_of_house {
 
 将以下代码留在 `src/lib.rs` 中：
 ```rust
-mod front_of_house; //模块在ci
+mod front_of_house; //模块在此时声明
 
 pub use crate::front_of_house::hosting;
 
@@ -2970,7 +2970,19 @@ pub fn eat_at_restaurant() {
 
 将实现放入一个单独的文件中 `src/front_of_house.rs`：
 ```rust
-pub mod hosting {
+pub mod hosting {  //模块在此处实现
     pub fn add_to_waitlist() {}
 }
 ```
+注意：
+- `mod front_of_house;` 告诉 Rust 从另一个和模块 `front_of_house` 同名的文件中加载该模块的内容
+- 使用绝对路径的方式来引用 `hosting` 模块：`crate::front_of_house::hosting;`
+- 关键字 `use`，该关键字用来将外部模块中的项引入到当前作用域中来，这样无需冗长的父模块前缀即可调用：
+
+
+如果你向往通过创建目录的方式组织子模块：
+- 在 `front_of_house` 目录里创建一个 `mod.rs`，如果你使用的 `rustc` 版本 `1.30` 之前，这是唯一的方法。
+- 在 `front_of_house` **同级**目录里创建一个与模块（目录）**同名**的 rs 文件 `front_of_house.rs`，在新版本里，更建议使用这样的命名方式来避免项目中存在大量同名的 `mod.rs` 文件
+
+
+## use 引入模块
