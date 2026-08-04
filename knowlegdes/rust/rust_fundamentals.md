@@ -3042,7 +3042,16 @@ ust 社区已经为我们贡献了大量高质量的第三方包，你可以在 
 use std::collections::{HashMap,BTreeMap,HashSet};
 use std::{cmp::Ordering, io};
 
-//同时引入包和里面的模块，self表示
+//同时引入包和里面的模块，self表示模块本身：io
 use std::io::{self, Write}; 
+
+//使用 `*` 引入模块下的所有项，这种方式比较危险
+//根本不清楚引入了什么东西
+use std::collections::*;
 ```
+
+
+
+
+
 
