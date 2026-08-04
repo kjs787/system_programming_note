@@ -2670,9 +2670,9 @@ panic = 'abort'
 ### 使用panic的时机
 ```rust
 use std::net::IpAddr;
-let home: IpAddr = "127.0.0.1".parse().unwrap();
+let home: IpAddr = "127.0.0.1".parse().unwrap().expect("Transation ERROR");
 ```
-`unwrap()`的作用很明确，parse()会返回Result<T, E>类型的值，如果是OK(T)就正常执行，如果是Err(E)就panic，不进行任何错误处理。
+`unwrap()`的作用很明确，parse()会返回Result<T, E>类型的值，如果是OK(T)就正常执行，如果是Err(E)就panic，不进行任何错误处理，调用except会打印错误信息。
 这适合明确知道该处一般不会报错或先对此代码打标记，之后再写错误处理代码的情况。
 
 当某处错误是可以预期的且可以处理，不会导致整个程序受影响，此时应该运用错误处理而非`panic`
@@ -2705,7 +2705,8 @@ fn main() {
 }
 ```
 这是一种常规错误处理写法，返回Result<T, E>类型，对其进行模式匹配，对Err(E)这一项进行错误处理。
-
+- 如果是文件不存在错误 `ErrorKind::NotFound`，就创建文件，这里创建文件`File::create` 也是返回 `Result`，因此继续用 `match` 对其结果进行处理：创建成功，将新的文件句柄赋值给 `f`，如果失败，则 `panic`
+- 剩下的错误，一律 `panic`
 
 
 
