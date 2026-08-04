@@ -2643,8 +2643,18 @@ let s: &'static str = "我没啥优点，就是活得久，嘿嘿";
 ## panic与不可恢复错误
 
 ### panic的触发方式
-一种是bei
+```rust
+fn main() {
+	let ret = error_check();  
+	if ret == ERROR {
+		panic!("error");
+	}
+}
+```
+可以使用 `panic!` 宏自动调用
+当进行一些严重错误（如数组越界访问）时会被动触发
 
+使用`RUST_BACKTRACE=1 cargo run` 或 `$env:RUST_BACKTRACE=1 ; cargo run`，可查看
 
 
 
