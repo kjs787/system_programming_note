@@ -2488,3 +2488,17 @@ assert_eq!(hash.get(&42), Some(&"the answer"));
 
 # 生命周期
 
+## 借用检查
+```rust
+{
+    let r;
+
+    {
+        let x = 5;
+        r = &x;
+    }
+
+    println!("r: {}", r);
+}
+```
+x的生命周期比r小，r却引用了x，这个代码会使r变为悬垂指针，而出现错误。rust会使用借用检测器来
