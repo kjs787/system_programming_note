@@ -2580,6 +2580,32 @@ fn first_word(s: &str) -> &str {
 
 
 
+## 方法中的生命周期
+```rust
+struct ImportantExcerpt<`a> {
+	part: &`a str,
+}
+
+impl<`a> ImportantExcerpt<`a> {
+	fn level(&self) -> i32 {
+		3
+	}
+} 
+```
+- `impl` 中必须使用结构体的完整名称，包括 `<'a>`，因为_生命周期标注也是结构体类型的一部分_
+- 方法签名中，往往不需要标注生命周期，得益于生命周期消除的第一和第三规则
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
