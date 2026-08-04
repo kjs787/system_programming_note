@@ -2672,7 +2672,11 @@ panic = 'abort'
 use std::net::IpAddr;
 let home: IpAddr = "127.0.0.1".parse().unwrap();
 ```
-`unwrap()`的作用很明确，parse()会返回Result<>
+`unwrap()`的作用很明确，parse()会返回Result<T, E>类型的值，如果是OK(T)就正常执行，如果是Err(E)就panic，不进行任何错误处理。
+这适合明确知道该处一般不会报错或先对此代码打标记，之后再写错误处理代码的情况。
+
+
+
 
 
 
