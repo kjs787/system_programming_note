@@ -2657,16 +2657,22 @@ fn main() {
 使用`RUST_BACKTRACE=1 cargo run` 或 `$env:RUST_BACKTRACE=1 ; cargo run`，可查看函数的调用栈（最近调用的在最上层）。
 
 
-### panic的指针方式
+### panic的两种终止方式
 ```rust
 [profile.release]
 panic = 'abort'
 ```
-可以通过修改Cargo，toml
+可以通过修改Cargo.toml文件来更改终止方式
 默认的方式就是 `栈展开`，Rust 会回溯栈上数据和函数调用，因此也意味着更多的善后工作，好处是可以给出充分的报错信息和栈调用信息。
 便于事后的问题复盘。`直接终止`，不清理数据就直接退出程序，善后工作交与操作系统来负责。
 
 
+### 使用panic的时机
+```rust
+use std::net::IpAddr;
+let home: IpAddr = "127.0.0.1".parse().unwrap();
+```
+`unwrap()`的作用很明确，parse()会返回Result<>
 
 
 
