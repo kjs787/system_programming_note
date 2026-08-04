@@ -3055,6 +3055,7 @@ use std::collections::*;
 
 
 
+
 # 注释与文档
 ## 代码注释
 ```rust
@@ -3231,3 +3232,8 @@ rust文档支持搜索功能，可以为类型其别名，方便搜索。
 
 
 # 格式化输出
+https://beatai.org/rust-course/basic/formatted-output
+格式太多，没必要一个个记忆，有需要去查阅就行
+
+
+至此，《rust圣经》基础部分完结，接下来进行代码练习。
