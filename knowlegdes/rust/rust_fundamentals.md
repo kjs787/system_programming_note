@@ -2987,6 +2987,7 @@ pub mod hosting {  //模块在此处实现
 
 
 ## use 引入模块
+### 引用模块或单个成员
 ```rust
 //引入整个模块
 use crate::front_of_house::hosting;
@@ -3000,7 +3001,7 @@ use std::collections::HashMap;
 - 作用域中存在同名函数
 
 
-## 避免同名引用
+### 避免同名引用
 ```rust
 //引用整个模块，通过限定访问的方式解决同名问题
 use std::fmt;
@@ -3012,4 +3013,23 @@ use std::io::Result as IoResult;
 ```
 
 
-## yi
+### 引用再导出
+```rust
+pub use crate::front_of_house::hosting;
+```
+被用于的模块会被再次设置为不可见，`pub use`的方式可以让引用的模块可见。
+
+
+### 引用第三方包
+```rust
+use rand::Rng;
+
+fn main() {
+    let secret_number = rand::thread_rng().gen_range(1..101);
+}
+```
+- 修改 `Cargo.toml` 文件，在 `[dependencies]` 区域添加一行：`rand = "0.8.3"`
+- 此时，如果你用的是 `VSCode` 和 `rust-analyzer` 插件，该插件会自动拉取该库，你可能需要等它完成后，再进行下一步（VSCode 左下角有提示）
+在代码中直接引用想要的模块就行。
+
+ust 社区已经为我们贡献了大量高质量的第三方包，你可以在 `crates.io` 或者 `lib.rs` 中检索和使用，从目前来说查找包更推荐 `lib.rs`，搜索功能更强大，内容展示也更加合理，但是下载依赖包还是得用`crates.io`。
