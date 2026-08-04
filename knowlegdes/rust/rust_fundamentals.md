@@ -3070,18 +3070,61 @@ fn main() {
 ```
 
 
+## 文档注释
+```rust
+/// `add_one` 将指定值加1
+///文档行注释
+/// # Examples
+///
+/// ```
+/// let arg = 5;
+/// let answer = my_crate::add_one(arg);
+///
+/// assert_eq!(6, answer);
+/// ```
+pub fn add_one(x: i32) -> i32 {
+    x + 1
+}
+```
+````rust
+/** `add_two` 将指定值加2
+这是文档块注释
+# Examples
+
+```
+let arg = 5;
+let answer = my_crate::add_two(arg);
+
+assert_eq!(7, answer);
+```
+*/
+````
+- 文档注释需要位于 `lib` 类型的包中，例如 `src/lib.rs` 中
+- 文档注释可以使用 `markdown`语法！例如 `# Examples` 的标题，以及代码块高亮
+- 被注释的对象需要使用 `pub` 对外可见，记住：文档注释是给用户看的，**内部实现细节不应该被暴露出去**
+
+运行 `cargo doc` 可以直接生成 `HTML` 文件，放入_target/doc_目录下。
+
+**常用文档标题**：
+- **Panics**：函数可能会出现的异常状况，这样调用函数的人就可以提前规避
+- **Errors**：描述可能出现的错误及什么情况会导致错误，有助于调用者针对不同的错误采取不同的处理方式
+- **Safety**：如果函数使用 `unsafe` 代码，那么调用者就需要注意一些使用条件，以确保 `unsafe` 代码块的正常工作
+
+
+## 包与模注释
+```rust
+/*! lib包是world_hello二进制包的依赖包，
+ 里面包含了compute等有用模块 */
+
+pub mod compute;
+```
+为包增加注释
+
+```rust
+//! 计算一些你口算算不出来的复杂算术题
+```
+为包根的子模块添加注释
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+## 文档测试(Doc Test)
