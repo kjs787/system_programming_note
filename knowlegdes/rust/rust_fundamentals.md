@@ -2712,7 +2712,14 @@ fn main() {
 
 
 ## 传播错误与 ? 的使用
-
+```rust
+fn open_file() -> Result<File, Box<dyn std::error::Error>> {
+    let mut f = File::open("hello.txt")?;
+    Ok(f)
+}
+```
+一般来说，更底层调用的函数会将错误传递给上层函数，错误类型的抽象程度也会上升。
+`?` 是一个宏，和 `match` 的功能相似，判断返回类型是否出错，不出错
 
 
 
