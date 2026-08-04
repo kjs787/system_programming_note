@@ -2774,9 +2774,36 @@ Rust 为我们提供了强大的包管理工具：
 - **模块(Module)**：可以一个文件多个模块，也可以一个文件一个模块，模块可以被认为是真实项目中的代码组织单元
 
 ### 包 Crate
-对于 Rust 而言，包是一个独立的可编译单元，它编译后会生成一个可执行文件或者一个库。一个包会将相关联的功能打包在一起，使得该功能可以很方便的在多个项目中分享。
+对于 Rust 而言，**包是一个独立的可编译单元**，它编译后会生成一个可执行文件或者一个库。一个包会将相关联的功能打包在一起，使得该功能可以很方便的在多个项目中分享。
 同一个包中不能有同名的类型，但是在不同包中就可以。
 
 ### 项目 Package
+```console
+$ cargo new my-project
+     Created binary (application) `my-project` package
+$ ls my-project
+Cargo.toml
+src
+$ ls my-project/src
+main.rs
+```
+创建一个二进制`Package`
+
 `Package` 就是一个项目，因此它包含有独立的 `Cargo.toml` 文件，以及因为功能性被组织在一起的一个或多个包。
 一个 `Package` 只能包含**一个**库(library)类型的包，但是可以包含**多个**二进制可执行类型的包。
+
+**`src/main.rs` 是二进制包的根文件，该二进制包的包名跟所属 `Package` 相同，在这里都是 `my-project`**，所有的代码执行都从该文件中的 `fn main()` 函数开始。
+
+
+```console
+$ cargo new my-lib --lib
+     Created library `my-lib` package
+$ ls my-lib
+Cargo.toml
+src
+$ ls my-lib/src
+lib.rs
+```
+创建一个库类型`Package`
+类型的 `Package` 只能作为三方库被其它项目引用，而不能独立运行
+如果一个 `Package` 包含有 `src/lib.rs`，意味它包含有一个库类型的同名包 `my-lib`，该包的根文件是 `src/lib.rs`。
