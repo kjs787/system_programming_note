@@ -2596,10 +2596,37 @@ impl<`a> ImportantExcerpt<`a> {
 - 方法签名中，往往不需要标注生命周期，得益于生命周期消除的第一和第三规则
 
 
+```rust
+impl<`a> ImportantExcerpt<`a> {
+	fn fuinction<`b>(&`a self, val: &`b str) -> &`b str{
+		self.part
+	}
+}
+```
+按照第三规则，返回值生命周期应该是`a和&self一样，但我们显示标注了返回值生命周期是`b。此时编译器会报错，因为不知道`a和`b谁的生命周期大。
 
 
 
-
+```rust
+impl<'a: 'b, 'b> ImportantExcerpt<'a> {
+    fn announce_and_return_part(&'a self, announcement: &'b str) -> &'b str {
+        println!("Attention please: {}", announcement);
+        self.part
+    }
+}
+```
+```rust
+impl<'a> ImportantExcerpt<'a> {
+    fn announce_and_return_part<'b>(&'a self, announcement: &'b str) -> &'b str
+    where
+        'a: 'b,
+    {
+        println!("Attention please: {}", announcement);
+        self.part
+    }
+}
+```
+我们可以通过加约束来告诉b yi qi
 
 
 
