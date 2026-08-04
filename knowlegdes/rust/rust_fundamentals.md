@@ -3128,3 +3128,70 @@ pub mod compute;
 
 
 ## 文档测试(Doc Test)
+### 撰写单元测试用例
+```rust
+/// `add_one` 将指定值加1
+///
+/// # Examples11
+///
+/// ```
+/// let arg = 5;
+/// let answer = world_hello::compute::add_one(arg);
+///
+/// assert_eq!(6, answer);
+/// ```
+pub fn add_one(x: i32) -> i32 {
+    x + 1
+}
+```
+Rust 允许在文档注释中写单元测试用例，测试是在另外一个独立的线程中运行的
+使用 `cargo test` 运行测试
+
+
+### panic 文档测试
+```rust
+/// # Panics
+///
+/// The function panics if the second argument is zero.
+///
+/// ```rust
+/// // panics on division by zero
+/// world_hello::compute::div(10, 0);
+/// ```
+pub fn div(a: i32, b: i32) -> i32 {
+    if b == 0 {
+        panic!("Divide-by-zero error");
+    }
+
+    a / b
+}
+```
+以上测试运行后会panic，如果想要通过这种测试，可以添加 `should_panic`
+
+
+### 保留测试，隐藏文档
+
+
+
+
+```rust
+/// ```
+/// # // 使用#开头的行会在文档中被隐藏起来，但是依然会在文档测试中运行
+/// # fn try_main() -> Result<(), String> {
+/// let res = world_hello::compute::try_div(10, 0)?;
+/// # Ok(()) // returning from try_main
+/// # }
+/// # fn main() {
+/// #    try_main().unwrap();
+/// #
+/// # }
+/// ```
+pub fn try_div(a: i32, b: i32) -> Result<i32, String> {
+    if b == 0 {
+        Err(String::from("Divide-by-zero"))
+    } else {
+        Ok(a / b)
+    }
+}
+```
+带`#`的文档会隐藏，但
