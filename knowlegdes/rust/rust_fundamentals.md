@@ -2654,7 +2654,19 @@ fn main() {
 可以使用 `panic!` 宏自动调用
 当进行一些严重错误（如数组越界访问）时会被动触发
 
-使用`RUST_BACKTRACE=1 cargo run` 或 `$env:RUST_BACKTRACE=1 ; cargo run`，可查看函数的调用栈。
+使用`RUST_BACKTRACE=1 cargo run` 或 `$env:RUST_BACKTRACE=1 ; cargo run`，可查看函数的调用栈（最近调用的在最上层）。
+
+
+### panic的指针方式
+```rust
+[profile.release]
+panic = 'abort'
+```
+可以通过修改Cargo，toml
+默认的方式就是 `栈展开`，Rust 会回溯栈上数据和函数调用，因此也意味着更多的善后工作，好处是可以给出充分的报错信息和栈调用信息。
+便于事后的问题复盘。`直接终止`，不清理数据就直接退出程序，善后工作交与操作系统来负责。
+
+
 
 
 
