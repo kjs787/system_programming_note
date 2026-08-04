@@ -3194,4 +3194,38 @@ pub fn try_div(a: i32, b: i32) -> Result<i32, String> {
     }
 }
 ```
-带`#`的文档会隐藏，但
+带`#`的文档会隐藏，但开发者可以正常测试。
+
+
+
+## 文档注释中的代码跳转
+```rust
+pub mod a {
+    /// `add_one` 返回一个[`Option`]类型
+    /// 跳转到[`crate::MySpecialFormatter`]
+    pub fn add_one(x: i32) -> Option<i32> {
+        Some(x + 1)
+    }
+}
+
+pub struct MySpecialFormatter;
+```
+有两种方式可以进行跳转：
+- 在 IDE 中，使用 `Command + 鼠标左键`(macOS)，`CTRL + 鼠标左键`(Windows)
+- 在文档中直接点击链接
+
+
+
+## 文档中搜索别名
+```rust
+#[doc(alias = "x")]
+#[doc(alias = "big")]
+pub struct BigX;
+
+#[doc(alias("y", "big"))]
+pub struct BigY;
+```
+rust文档支持搜索功能，可以为类型其别名，方便搜索。
+
+
+
