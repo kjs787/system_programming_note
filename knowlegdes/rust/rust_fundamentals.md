@@ -2690,16 +2690,21 @@ use std::fs::File;
 
 fn main() {
     let f = File::open("hello.txt");
-
-    let f = match f {
+	
+	//返回类型是std::result::Result<std::fs::File, std::io::Error>
+	let f = match f {
         Ok(file) => file,
-        Err(error) => {
-            panic!("Problem opening the file: {:?}", error)
+        Err(error) => match error.kind() {
+	        ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
+                Err(e) => panic!("Problem creating the file: {:?}", e),
+            },
+            other_error => panic!("Problem opening the file: {:?}", other_error),
         },
-    };
+	};
 }
 ```
-这是一种常规错误处理写法，返回Result<T, E>类型，对其进行模式匹配，进行处理。
+这是一种常规错误处理写法，返回Result<T, E>类型，对其进行模式匹配，对Err(E)这一项进行错误处理。
 
 
 
