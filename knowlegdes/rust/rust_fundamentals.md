@@ -2895,7 +2895,7 @@ pub fn eat_at_restaurant() {
     // 绝对路径
     crate::front_of_house::hosting::add_to_waitlist();
 
-    // 相对路径，模块
+    // 相对路径，crate模块名引用
     front_of_house::hosting::add_to_waitlist();
 }
 ```
@@ -2918,3 +2918,33 @@ mod back_of_house {
     fn cook_order() {}
 }
 ```
+```rust
+fn serve_order() {
+    self::back_of_house::cook_order()
+}
+
+mod back_of_house {
+    fn fix_incorrect_order() {
+        cook_order();
+        crate::serve_order();
+    }
+
+    pub fn cook_order() {}
+}
+```
+补充`super`和`self`引用，了解一下
+
+
+
+### 代码可见性
+
+```rust
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+/*--- snip ----*/
+```
+使用 `pub` 关键字标注代码可见性。rust默认所有模块，函数，结构体等，对外都不可见。所以要手动表明代码可见性。
