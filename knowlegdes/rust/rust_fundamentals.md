@@ -2685,6 +2685,22 @@ let home: IpAddr = "127.0.0.1".parse().unwrap();
 
 
 ## 可恢复错误 Result
+```rust
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt");
+
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => {
+            panic!("Problem opening the file: {:?}", error)
+        },
+    };
+}
+```
+这是一种常规错误处理写法，返回Result<T, E>类型，对其进行模式匹配，进行处理。
+
 
 
 
