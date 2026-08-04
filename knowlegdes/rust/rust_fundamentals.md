@@ -2534,7 +2534,17 @@ fn longest<`a>(x: &`a str, y: &`a str) -> &`a str {
 
 
 
-## 
+## 结构体生命周期
+```rust
+struct ImportantExcerpt<`a> {
+	part: &`a str,
+}
+
+fn main() {
+	let novel = String::from("Call me Ishmael. Some years ago..." );
+	let first_sentence = novel.split('.').next();
+}
+ ```
 
 
 
