@@ -2718,10 +2718,24 @@ fn open_file() -> Result<File, Box<dyn std::error::Error>> {
     Ok(f)
 }
 ```
-一般来说，更底层调用的函数会将错误传递给上层函数，错误类型的抽象程度也会上升。
-`?` 是一个宏，和 `match` 的功能相似，判断返回类型是否出错，不出错
+一般来说，更底层调用的函数会将错误传递给上层函数，**错误类型的抽象程度也会上升**。他要求上层函数返回值类型是Result
+`?` 是一个宏，和 `match` 的功能相似，判断返回类型是否出错，不出错可以继续运行，出错提前让上层函数返回，且他会**自动进行错误类型转换**。
 
 
+```rust
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut s = String::new();
+
+    File::open("hello.txt")?.read_to_string(&mut s)?;
+
+    Ok(s)
+}
+```
+`?`可以进行链式调用，进一步简化代码。
 
 
 
