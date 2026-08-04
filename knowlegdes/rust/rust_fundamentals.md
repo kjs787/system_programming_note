@@ -2952,3 +2952,25 @@ mod front_of_house {
 - 将结构体设置为 `pub`，但它的所有字段依然是私有的
 - 将枚举设置为 `pub`，它的所有字段也将对外可见
 
+
+### 模块与文件分离
+
+将以下代码留在 `src/lib.rs` 中：
+```rust
+mod front_of_house; //模块在ci
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+```
+
+将实现放入一个单独的文件中 `src/front_of_house.rs`：
+```rust
+pub mod hosting {
+    pub fn add_to_waitlist() {}
+}
+```
