@@ -2843,3 +2843,36 @@ lib.rs
 
 
 ## 模块 Module
+###模块嵌套
+```rust
+// 餐厅前厅，用于吃饭
+mod front_of_house {
+    mod hosting {
+        fn add_to_waitlist() {}
+
+        fn seat_at_table() {}
+    }
+
+    mod serving {
+        fn take_order() {}
+
+        fn serve_order() {}
+
+        fn take_payment() {}
+    }
+}
+```
+```console
+crate
+ └── front_of_house
+     ├── hosting
+     │   ├── add_to_waitlist
+     │   └── seat_at_table
+     └── serving
+         ├── take_order
+         ├── serve_order
+         └── take_payment
+```
+以上的代码创建了三个模块下图是他的模块树
+
+
