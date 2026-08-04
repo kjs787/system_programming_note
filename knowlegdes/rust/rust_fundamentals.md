@@ -2718,7 +2718,7 @@ fn open_file() -> Result<File, Box<dyn std::error::Error>> {
     Ok(f)
 }
 ```
-一般来说，更底层调用的函数会将错误传递给上层函数，**错误类型的抽象程度也会上升**。他要求上层函数返回值类型是Result
+一般来说，更底层调用的函数会将错误传递给上层函数，**错误类型的抽象程度也会上升**。他要求上层函数返回值类型是Result<T,E>或 Option<T>。
 `?` 是一个宏，和 `match` 的功能相似，判断返回类型是否出错，不出错可以继续运行，出错提前让上层函数返回，且他会**自动进行错误类型转换**。
 
 
@@ -2739,8 +2739,27 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 
 
+```rust
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt")?;
+}
+```
+```rust
+use std::error::Error;
+use std::fs::File;
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let f = File::open("hello.txt")?;
+
+    Ok(())
+}
+```
+第一段代码是一个常见错误，`?` 要求 `Result<T, E>` 形式的返回值，而 `main` 函数的返回是 `()`，因此无法满足。
+但main函数可以有多种返回值，因为实现了 std::process::Termination特征，目前为止该特征还没进入稳定版 Rust 中
 
 
 
 
-
+# 包和模块
