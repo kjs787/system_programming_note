@@ -2875,10 +2875,46 @@ crate
 ```
 图一的代码创建了三个模块，图二是他的模块树。
 使用模块，将功能相近的代码组织在一起，然后通过一个模块名称来说明这些代码为何被组织在一起。
-模块之间是有嵌套关系的，子模块可以自由访问父模块，反之bu x
+模块之间是有嵌套关系的，子模块可以自由访问父模块，反之不行。
 
 - 使用 `mod` 关键字来创建新模块，后面紧跟着模块名称
 - 模块可以嵌套，这里嵌套的原因是招待客人和服务都发生在前厅，因此我们的代码模拟了真实场景
 - 模块中可以定义各种 Rust 类型，例如函数、结构体、枚举、特征等
 - 所有模块均定义在同一个文件中
 
+
+### 引用模块
+```rust
+mod front_of_house {
+    mod hosting {
+        fn add_to_waitlist() {}
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // 绝对路径
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // 相对路径，模块
+    front_of_house::hosting::add_to_waitlist();
+}
+```
+有`绝对路径`和`相对路径`引用两种主要方式，各有优缺点。
+其中相对引用又有`self`、`super`和 `crate` 或者模块名引用三种形式
+选哪种方法主要是看模块树结构和后续项目结构变更情况
+
+
+
+```rust
+fn serve_order() {}
+
+// 厨房模块
+mod back_of_house {
+    fn fix_incorrect_order() {
+        cook_order();
+        super::serve_order();
+    }
+
+    fn cook_order() {}
+}
+```
