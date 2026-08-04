@@ -2987,3 +2987,29 @@ pub mod hosting {  //模块在此处实现
 
 
 ## use 引入模块
+```rust
+//引入整个模块
+use crate::front_of_house::hosting;
+//引入单个函数或结构体
+use front_of_house::hosting::add_to_waitlist;
+use std::collections::HashMap;
+```
+从使用简洁性来说，直接引入函数或结构体更好，但是在某些时候，引入模块会更好：
+
+- 需要引入同一个模块的多个函数
+- 作用域中存在同名函数
+
+
+## 避免同名引用
+```rust
+//引用整个模块，通过限定访问的方式解决同名问题
+use std::fmt;
+use std::io;
+
+//as起一个别名
+use std::fmt::Result;
+use std::io::Result as IoResult;
+```
+
+
+## yi
