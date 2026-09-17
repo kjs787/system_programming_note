@@ -1,7 +1,5 @@
 # system_programming_note
 
-本人学习系统编程的笔记。笔记软件是Obsidian。
-
 
 ## 项目目录
 - system_programming_note
