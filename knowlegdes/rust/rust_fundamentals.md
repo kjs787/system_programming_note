@@ -120,7 +120,7 @@ rust整形默认使用 **i32** 类型，他往往是性能最好的。
 |十六进制|`0xff`|
 |八进制|`0o77`|
 |二进制|`0b1111_0000`|
-|字节 (仅限于 `u8`<br><br>)|`b'A'`|
+|字节 (仅限于 `u8`)|`b'A'`|
 
 ### 整形溢出
 
@@ -219,7 +219,7 @@ for i in 'a'..='z' {
 ```
 let a: i32 = 10;
 let b: u16 = 100;
-if a < (b as 132) {
+if a < (b as i32) {
     println!("a is  less than b")
 }
 ```
@@ -287,7 +287,7 @@ fn main( )就返回一个单元类型
 ## String类型
 
 ```
-let s = “hello”； //s是&str类型 
+let s = "hello"； //s是&str类型 
 ```
 
 `s` 是被硬编码进程序里的字符串值，使用字符串字面值进行赋值。
@@ -312,7 +312,7 @@ Rust 为我们提供动态字符串类型: `String`，该类型被分配到堆�
 ```
 //10是表达式
 //let a = 10；是语句
-let a = 10； 
+let a = 10; 
 
 fn add_with_extra(x: i32, y: i32) -> i32 {
     let x = x + 1; // 语句
@@ -323,9 +323,9 @@ fn add_with_extra(x: i32, y: i32) -> i32 {
 //if语句块是表达式
 //类似三元运算符的写法
 let y =  if a / 10 == 1{
-    “1”;
+    "1";
 }else{
-    “2”;
+    "2";
 }   
 ```
 
@@ -333,7 +333,9 @@ let y =  if a / 10 == 1{
 
 **表达式不能包含分号**。这一点非常重要，一旦你在表达式后加上分号，它就会变成一条语句，再也**不会**返回一个值
 
-表达式如果不返回任何值，会隐式地返回一个 [()](https://beatai.org/rust-course/basic/base-type/char-bool#%E5%8D%95%E5%85%83%E7%B1%BB%E5%9E%8B)
+表达式如果不返回任何值，会隐式地返回一个 `()` 
+
+
 
 ## 函数
 
@@ -345,9 +347,7 @@ fn add(a: i32, b: i32) -> i32 {
 }
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/63601471/1784599884653-efded943-b58a-4f6e-9ca5-7f542986b648.png)
-
-  
+ 
 
 ### 函数的要点
 
@@ -436,14 +436,14 @@ let y = x；
 
 这种浅拷贝，往往发生在拥有 `Copy` 特征且存储在栈上的类型中，拷贝过程不会发生所有权的交换。
 
-**任何基本类型的组合可以** `**Copy**` **，不需要分配内存或某种形式资源的类型是可以** `**Copy**` **的：**
+**任何基本类型的组合可以** `Copy` **，不需要分配内存或某种形式资源的类型是可以** `Copy` **的：**
 
 - 所有整数类型，比如 `u32`
 - 布尔类型，`bool`，它的值是 `true` 和 `false`
 - 所有浮点数类型，比如 `f64`
 - 字符类型，`char`
 - 元组，当且仅当其包含的类型也都是 `Copy` 的时候。比如，`(i32, i32)` 是 `Copy` 的，但 `(i32, String)` 就不是
-- 不可变引用 `&T` ，例如[转移所有权](https://beatai.org/rust-course/basic/ownership/ownership#%E8%BD%AC%E7%A7%BB%E6%89%80%E6%9C%89%E6%9D%83)中的最后一个例子，**但是注意：可变引用** `**&mut T**` **是不可以 Copy的**
+- 不可变引用 `&T` ，例如[转移所有权](https://beatai.org/rust-course/basic/ownership/ownership#%E8%BD%AC%E7%A7%BB%E6%89%80%E6%9C%89%E6%9D%83)中的最后一个例子，**但是注意：可变引用** `&mut T` **是不可以 Copy的**
 
 
 ### 函数传值与返回
@@ -474,19 +474,15 @@ fn makes_copy(some_integer: i32) { // some_integer 进入作用域
 
 ```
 fn main() {
-    let s1 = gives_ownership();         // gives_ownership 将返回值
-                                        // 移给 s1
+    let s1 = gives_ownership();         // gives_ownership 将返回值移给 s1
 
     let s2 = String::from("hello");     // s2 进入作用域
 
-    let s3 = takes_and_gives_back(s2);  // s2 被移动到
-                                        // takes_and_gives_back 中,
-                                        // 它也将返回值移给 s3
+    let s3 = takes_and_gives_back(s2);  // s2 被移动到takes_and_gives_back 中,它也将返回值移给 s3
 } // 这里, s3 移出作用域并被丢弃。s2 也移出作用域，但已被移走，
   // 所以什么也不会发生。s1 移出作用域并被丢弃
 
-fn gives_ownership() -> String {             // gives_ownership 将返回值移动给
-                                             // 调用它的函数
+fn gives_ownership() -> String {             // gives_ownership 将返回值移动给调用它的函数
 
     let some_string = String::from("hello"); // some_string 进入作用域.
 
@@ -611,13 +607,9 @@ fn dangle() -> &String { // dangle 返回一个字符串的引用
 // 危险！
 ```
 
-解决方法是直接传递值的所有权
+解决方法是直接传递值的所有权！
 
 Rust 编译器可以确保引用永远也不会变成悬垂状态
-
-  
-
-  
 
 # 复合类型
 
@@ -644,18 +636,20 @@ let slice3 = &s[0..len];
 
 - 字符串切片是个相当危险的操作，当进行字符串切片时，确保你明确索引范围
 
+  
+
 ### rust字符串
 
 **Rust 中的字符是 Unicode 类型，因此每个字符占据 4 个字节内存空间，但是在字符串中不一样，字符串是 UTF-8 编码，也就是字符串中的字符所占的字节数是变化的(1 - 4)**
 
-**当 Rust 用户提到字符串时，往往指的就是** `**String**` **类型和** `**&str**` **字符串切片类型，这两个类型都是 UTF-8 编码。**
+**当 Rust 用户提到字符串时，往往指的就是** `String` **类型和** `&str` **字符串切片类型，这两个类型都是 UTF-8 编码。**
 
 str来来自语言本身，常在字符串切片中以&str出现，而String则来自于标准库。他们之间可以相互转换。
 
 ### String与&str相互转换
 
-- 将&str转换为String，通过一些库函数即可。
-- 将String转换为&str，可以通过对String取引用和字符串切片
+- 将`&str` 转换为`String` ，通过一些库函数即可。
+- 将`String`转换为`&str`，可以通过对`String`取引用和字符串切片
 
   
 
@@ -871,13 +865,15 @@ let x = tup2.0;
 let y = tup2.1;
 let z = tup2.2;
 ```
-可以使用模式匹配来或 . 来获取元组的值
+可以使用模式匹配来或` . `来获取元组的值
 元组索引从0开始
 
 元组可以用来作为函数返回值，再用模式匹配获取多个值。
 
 
+
 ## 结构体
+
 ### 结构体语法
 ```rust
 struct User{
@@ -932,10 +928,6 @@ let user2 = User{
 注意：user1的username成员的所有权被转移到user2的成员中来，而其他成员（activate， sign_in_count）具有Copy特征，只做了复制。user1的email在本次赋值中没有使用，自然没有所有权的转移。
 
 
-### 结构体内存排布
-![[Pasted image 20260726090246.png]]
-
-
 ### 元组结构体
 ```rust
 struct Point(i32, i32, i32);
@@ -946,7 +938,7 @@ let origin = Point(0, 0, 0);
 
 ### 单元结构体
 ```rust
-struct MyUnitStruct；
+struct MyUnitStruct;
 ```
 单元结构体不包含任何字段，但十分有用。
 单元结构体的核心价值在于：**用零运行时成本，在类型系统中表达“概念”、“行为”或“标记”**。它是 Rust 实现零成本抽象（Zero-Cost Abstraction）的重要基石之一。
@@ -1139,8 +1131,6 @@ assert_eq!(slice, &[2, 3]);
 - 创建切片的代价非常小，因为切片只是针对底层数组的一个引用
 - 切片类型 [T] 拥有不固定的大小，而切片引用类型 &[T] 则具有固定的大小，因为 Rust 很多时候都需要固定大小数据类型，因此 &[T] 更有用，`&str` 字符串切片也同理
 
-
-
 # 流程控制
 
 ## if判断
@@ -1154,9 +1144,7 @@ let number = if condition == 1 {
 		7
     };
 ```
-**`if` 语句块是表达式**，其返回值可以给变量赋值
-`if 用来赋值时，其各分支的返回值类型应该相同
-使用`else if`处理多重条件
+**`if` 语句块是表达式**，其返回值可以给变量赋值。if 用来赋值时，其各分支的返回值类型应该相同
 
 
 ## for循环
@@ -1196,7 +1184,7 @@ for (i, v) in a.iter().enumerate() {
 如果是下标遍历，会面临下标访问越界的风险，还需要耗费性能做越界检查。
 
 ```rust
-for _ in 0..=10 {
+for _ in 0..10 {
 	continue;
 }
 ```
@@ -1225,8 +1213,6 @@ loop {
 loop无条件循环循环需要你手动break退出
 - **break 可以单独使用，也可以带一个返回值**，有些类似 `return`
 - **loop 是一个表达式**，因此可以返回一个值
-
-
 
 # 模式匹配
 模式匹配：将模式与 `target` 进行匹配，即为模式匹配
@@ -1315,7 +1301,7 @@ assert!(matches!(foo, 'A'..='Z' | 'a'..='z'));
 ```
 matches!宏将表达式与模式进行匹配，返回匹配的结果。
 
-小心变量遮蔽，因为`match`和`if let`都算是新的代码块，会产生变量遮蔽。请尽量不要在代码块中起同名变量。
+小心**变量遮蔽**，因为`match`和`if let`都算是新的代码块，会产生变量遮蔽。请尽量不要在代码块中起同名变量。
 
 
 
@@ -1401,8 +1387,6 @@ else常用来做错误处理
 
 ## 全模式列表
 常用模式匹配语法：https://beatai.org/rust-course/basic/match-pattern/all-patterns
-
-
 
 # 方法 Method
 
@@ -1510,8 +1494,6 @@ fn main() {
 ```
 可以为枚举类型定义方法
 
-
-
 # 泛型和特征
 
 ## 泛型Generics
@@ -1604,8 +1586,8 @@ struct Point<T> {
 	y: T,
 }
 
-impl<T> Point<T> {
-	fn get_x(&self) -> &T {
+impl<P> Point<P> {
+	fn get_x(&self) -> &P {
 		&self.x
 	}
 }
@@ -1613,7 +1595,7 @@ impl<T> Point<T> {
 let p = Point{x: 1, y: 2};
 println!("x is {}", p.x());
 ```
-这里的Point<T>是一个完整的结构体类型而非泛型声明。
+这里的Point<T>是一个完整的结构体类型而非泛型声明。impl<P>做了泛型声明，为Point<T>泛型类型实现方法
 这几种泛型的定义是不一样的，互不冲突
 
 
@@ -1658,7 +1640,7 @@ fn main() {
     something([0u8; 1024]); // 编译错误，数组长度是1024字节，超过了768字节的参数长度限制
 }
 ```
-伪代码，使用const泛型表达式可以限制函数参数占用内存大小。
+伪代码，使用const泛型表达式可以**限制函数参数占用内存**大小。
 
 
 
