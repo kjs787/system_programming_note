@@ -1700,8 +1700,8 @@ pub trait Summary {
 
 pub struct Post {
 	pub title: String,
-	pub author: String.
-	pub content: String;
+	pub author: String,
+	pub content: String,
 }
 
 //为 `Post` 类型实现 `Summary` 特征
@@ -1875,8 +1875,8 @@ fn draw2(x: &dyn Draw) {
 
 fn main() {
 	let y = 8u8;
-	draw1(Box::new(x));
-	draw2(&x);
+	draw1(Box::new(y));
+	draw2(&y);
 }
 ```
 使用`dyn`关键字声明一个特征对象。
@@ -1928,19 +1928,22 @@ impl<T> Screen<T>
 **鸭子类型(duck typing)**简单来说，就是只关心值长啥样，而不关心它实际是什么。在特征对象中，表现为我们只关心某种类型是否实现了某个特征。
 
 
+
+
 ### 动态分发和静态分发
 编译器会为每一个泛型参数对应的具体类型生成一份代码，这种方式是**静态分发(static dispatch)**，因为是在编译期完成的，对于运行期性能完全没有任何影响。
 
-
 **动态分发(dynamic dispatch)**，在这种情况下，直到运行时，才能确定需要调用什么方法。之前代码中的关键字 `dyn` 正是在强调这一“动态”的特点。
-
-![[Pasted image 20260729110441.png]]
 
 
 对动态分发的解释：
 - 特征对象引用由两个指针组成，**ptr指针指向实现特征的类型的具体实例；vptr指针指向vtable虚表**，虚表中存储该类型对特征方法的实现。特征对象可以直接从虚表中找到方法并调用。
+
 - 不同类型的虚表显然是不同的
+
 - 特征对象大小不固定，但特征对象引用大小是固定的，很常用
+
+  
 
 
 ### Self与self
@@ -1957,6 +1960,7 @@ self指向当前实例对象，Self指代特征或方法类型
 
 只有满足对象安全的特征才能拥有特征对象
 满足两个条件：
+
 - 方法的返回类型不能是 `Self`
 - 方法没有任何泛型参数
 
@@ -1973,7 +1977,7 @@ pub trait Iterator {
 
 impl Iterator for Counter {
 	type Item = u32;
-	fn next(&mut self) -> Option<self::Item> {
+	fn next(&mut self) -> Option<Self::Item> {
 		//snip
 	}
 }
@@ -2079,13 +2083,9 @@ trait OutlinePrint: Display {
 ```
 在特征定义时，进行约束。上例当为某一类型实现OutlinePrint特征时，必须先为类型实现Display特征。因为OutlinePrint特征调用了Display特征的to_string()。
 
-
-
 ### newtype
 为了绕过孤儿规则引入`newtype`，就是为一个**元组结构体**创建新类型。该元组结构体封装有一个字段，该字段就是希望实现特征的具体类型。
 没有很明白newtype的意义，等之后再进行补充。
-
-
 
 
 # 集合类型
@@ -2147,7 +2147,7 @@ println!("The first element is: {first}");   //调用了前面的不可变借用
 
 ### 遍历数组
 ```rust
-let x = vec![1,2,3];
+let v = vec![1,2,3];
 for in &v {
 	println!("{i}");
 }
@@ -2432,7 +2432,7 @@ fn main() {
 
 ```rust
 use::std::collections::HashMap();
-let text = “hello world  hello great world”；
+let text = “hello world hello great world”；
 let mut map = HashMap::new();
 //根据空格分割字符串
 for word in text.split_whitespace() {
@@ -2444,9 +2444,10 @@ for word in text.split_whitespace() {
 有两点值得注意：
 
 - `or_insert` 返回了 `&mut v` 引用(值的引用)，因此可以通过该可变引用直接修改 `map` 中对应的值
+
 - 使用 `count` 引用时，需要先进行解引用 `*count`，否则会出现类型不匹配
 
-
+  
 
 ### 哈希函数
 若性能测试显示当前标准库默认的哈希函数不能满足你的性能需求，就需要去 [`crates.io`](https://crates.io) 上寻找其它的哈希函数实现，使用方法很简单：
@@ -2466,20 +2467,16 @@ assert_eq!(hash.get(&42), Some(&"the answer"));
 目前`HashMap`使用的哈希函数为`SipHash`，它的性能不是很高，但是安全性很高。`SipHash` 在中等大小的 `Key` 上，性能相当不错，但是对于小型的 `Key` （例如整数）或者大型 `Key` （例如字符串）来说，性能还是不够好。若你需要极致性能，例如实现算法，可以考虑这个库：ahash
 
 
-
-
 # 生命周期
 
 ## 借用检查
 ```rust
 {
     let r;
-
     {
         let x = 5;
         r = &x;
     }
-
     println!("r: {}", r);
 }
 ```
@@ -2501,7 +2498,7 @@ fn longest<`a>(x: &`a str, y: &`a str) -> &`a str {
 ```
 该函数返回字符串切片中较长的那个，因为函数可能返回 x 也可能返回 y，编译器无法推断出返回的生命周期长度，就需要我们显示的进行生命周期标注。
 - 和泛型一样，使用生命周期参数，需要先声明 `<'a>`
-- `x`、`y` 和返回值**至少**活得和 `'a` 一样久（因为返回值要么是 `x`，要么是 `y`）
+- `x`、`y` 和返回值**至少**活得和 ``a` 一样久（因为返回值要么是 `x`，要么是 `y`）
 - 标注不会改变实际生命周期，我们只是想让编译通过
 
 
@@ -2553,7 +2550,8 @@ fn first_word(s: &str) -> &str {
 
 
 
-###三条消除规则
+### 三条消除规则
+
 1. **每一个引用参数都会获得独自的生命周期**
 2. **若只有一个输入生命周期（函数参数中只有一个引用类型），那么该生命周期会被赋给所有的输出生命周期**，也就是所有返回值的生命周期都等于该输入生命周期
 3. **若存在多个输入生命周期，且其中一个是 `&self` 或 `&mut self`，则 `&self` 的生命周期被赋给所有的输出生命周期**
@@ -2585,7 +2583,7 @@ impl<`a> ImportantExcerpt<`a> {
 	}
 }
 ```
-按照第三规则，返回值生命周期应该是`a和&self一样，但我们显示标注了返回值生命周期是`b。此时编译器会报错，因为不知道`a和`b谁的生命周期大。
+按照第三规则，返回值生命周期应该是`a和&self一样，但我们显示标注了返回值生命周期是b。此时编译器会报错，因为不知道a和b谁的生命周期大。
 
 
 
@@ -2616,8 +2614,6 @@ impl<'a> ImportantExcerpt<'a> {
 let s: &'static str = "我没啥优点，就是活得久，嘿嘿";
 ```
 静态生命周期活的和程序一样久，用来解决很复杂的生命周期问题。但当程序员都不清楚该引用的生命周期时，这无疑是很危险的。
-
-
 
 
 # 错误处理
@@ -2825,7 +2821,8 @@ lib.rs
 
 
 ## 模块 Module
-###模块嵌套
+### 模块嵌套
+
 ```rust
 // 餐厅前厅，用于吃饭
 mod front_of_house {
@@ -2931,6 +2928,7 @@ mod front_of_house {
 ```
 使用 `pub` 关键字标注代码可见性。rust默认所有模块，函数，结构体等，对外都不可见。所以要手动表明代码可见性。
 枚举和结构体标明可见的效果是不同的：
+
 - 将结构体设置为 `pub`，但它的所有字段依然是私有的
 - 将枚举设置为 `pub`，它的所有字段也将对外可见
 
