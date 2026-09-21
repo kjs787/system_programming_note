@@ -2488,7 +2488,7 @@ rust会使用`借用检查器`，比较生命周期的长度，来保证借用�
 
 ## 生命周期标注语法
 ```rust
-fn longest<`a>(x: &`a str, y: &`a str) -> &`a str {
+fn longest<'a>(x: &`a str, y: &`a str) -> &'a str {
 	if x.len() > y.len() {
 		x
 	}else{
@@ -2498,7 +2498,7 @@ fn longest<`a>(x: &`a str, y: &`a str) -> &`a str {
 ```
 该函数返回字符串切片中较长的那个，因为函数可能返回 x 也可能返回 y，编译器无法推断出返回的生命周期长度，就需要我们显示的进行生命周期标注。
 - 和泛型一样，使用生命周期参数，需要先声明 `<'a>`
-- `x`、`y` 和返回值**至少**活得和 ``a` 一样久（因为返回值要么是 `x`，要么是 `y`）
+- `x`、`y` 和返回值**至少**活得和 `'a` 一样久（因为返回值要么是 `x`，要么是 `y`）
 - 标注不会改变实际生命周期，我们只是想让编译通过
 
 
@@ -2515,8 +2515,8 @@ fn longest<`a>(x: &`a str, y: &`a str) -> &`a str {
 
 ## 结构体生命周期
 ```rust
-struct ImportantExcerpt<`a> {
-	part: &`a str,
+struct ImportantExcerpt<'a> {
+	part: &'a str,
 }
 
 fn main() {
@@ -2562,11 +2562,11 @@ fn first_word(s: &str) -> &str {
 
 ## 方法中的生命周期
 ```rust
-struct ImportantExcerpt<`a> {
+struct ImportantExcerpt<'a> {
 	part: &`a str,
 }
 
-impl<`a> ImportantExcerpt<`a> {
+impl<`a> ImportantExcerpt<'a> {
 	fn level(&self) -> i32 {
 		3
 	}
@@ -2577,8 +2577,8 @@ impl<`a> ImportantExcerpt<`a> {
 
 
 ```rust
-impl<`a> ImportantExcerpt<`a> {
-	fn fuinction<`b>(&`a self, val: &`b str) -> &`b str{
+impl<`a> ImportantExcerpt<'a> {
+	fn fuinction<'b>(&a self, val: &'b str) -> &'b str{
 		self.part
 	}
 }

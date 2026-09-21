@@ -1,16 +1,304 @@
 # 智能指针
 
+## `Box<T>`堆对象分配
+
+`Box<T>` 是 Rust 中最常见的智能指针，`Box<T>` 允许你将一个值分配到堆上，然后在栈上保留一个智能指针指向堆上的数据。
+
+`Box` 背后是调用 `jemalloc` 来做内存管理，所以堆上的空间无需我们的手动管理。
 
 
 
+### rust堆栈性能
+
+在 Rust 中，`main` 线程的栈大小是 `8MB`，普通线程是 `2MB`，在函数调用时会在其中创建一个临时栈空间，调用结束后 Rust 会让这个栈空间里的对象自动进入 `Drop` 流程，最后栈顶指针自动移动到上一个调用栈顶，无需程序员手动干预，因而栈内存申请和释放是非常高效的。
+
+对于堆栈性能的比较：
+
+- 小型数据，在栈上的分配性能和读取性能都要比堆上高
+- 中型数据，栈上分配性能高，但是读取性能和堆上并无区别，因为无法利用寄存器或 CPU 高速缓存，最终还是要经过一次内存寻址
+- 大型数据，只建议在堆上分配和使用
 
 
 
+### 使用`Box<T>`
+
+以下是该智能指针常见使用场景：
+
+1. 使用`Box<T>`将数据存储在堆上
+
+   ```rust
+   fn main() {
+   	let a = Box::new(3);
+       println!("a = {}", a);	//Box<T>实现了Deref特征
+   } 
+   //Box<T>实现了Drop特征
+   //a持有的智能指针会在作用域结束自动释放。
+   ```
+
+2. 避免栈上的数据拷贝
+
+   ```rust
+   fn main() {
+       //在堆上申请了长度为1000的数组
+       let arr = Box::new([0;1000]);
+       
+       //arr将堆上数据的所有权转交给arr1
+       //只拷贝了一份栈上的智能指针
+       let arr1 = arr;
+       println!("{:?}", arr1.len());
+   }
+   ```
+
+3. 将动态类型大小转化为Sized固定大小类型
+
+   rust不知道List的大小，认为其是一个**动态大小类型 DST**，会报错。
+
+   我们用`Box<T>`指向它，将DST转化为Sized类型
+
+   ```rust
+   enum List {
+   	Cons(i32, Box<List>),  
+       Nil,
+   }
+   ```
+
+4. 特征对象
+
+   将不同类型的特征对象放入同一个数组中，因为特征是DST类型
+
+   ```rust
+   trait Draw {
+   	fn draw(&self);
+   }
+   
+   struct Button {
+       id: u32,
+   }
+   
+   impl Draw for Button {
+   	fn draw(&self) {
+   		//...
+       }
+   }
+   
+   struct Select {
+       id: u32,
+   }
+   
+   impl Draw for Select{
+   	fn draw(&self) {
+   		//...
+       }
+   }
+   
+   fn main() {
+   	let elems: Vec<Box<dyn Draw>> = vec![Box::new(Botton{id:1}), Box::new(Select {id: 2})];
+       
+       for e in elems {
+   		e.draw();
+       }
+   }
+   ```
+
+   
+
+### Box::leak
+
+`Box::leak`可以强制消费掉`Box`并让内存泄漏，可以利用这个特性，让一个运行中申请的值生命周期变为`'static`。
+
+**如果你需要一个在运行期初始化的值，但是可以全局有效**，那么就可以使用 `Box::leak`
+
+```rust
+fn main() {
+   let s = gen_static_str();
+   println!("{}", s);
+}
+
+fn gen_static_str() -> &'static str{
+    let mut s = String::new();
+    s.push_str("hello, world");
+
+    Box::leak(s.into_boxed_str())
+}
+```
 
 
 
+## Deref解引用
+
+智能指针实现了`Dref`特征，让其可以像指针一样解引用出里面的值。且rust为其做了特殊处理，使其自动匹配需要的类型，不用多次解引用。
 
 
+
+### 智能指针的解引用
+
+我们尝试定义一个自己的`Box<T>`，并为其实现`Dref`特征：
+
+```rust
+struct MyBox<T>(T);
+
+impl<T> MyBox<T> {
+	fn main(x: T) -> MyBox<T> {
+		MyBox(x);
+    }
+}
+
+
+use std::ops::Deref;
+//实现Dref特征
+impl<T> Deref for MyBox<T> {
+	type Target = T;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+```
+
+
+
+当我们对智能指针进行解引用时，Rust首先调用 `deref` 方法返回值的常规引用，然后通过 `*` 对常规引用进行解引用，最终获取到目标值。这样不会发生所有权的转移。
+
+```rust
+*(y.deref())	//这种替换只会发生一次
+```
+
+
+
+### 连续的隐式转换
+
+`Deref` 可以支持连续的隐式转换，直到找到适合的形式为止，且这种行为在编译期完成的，完全没有性能损耗。以降低可读性和编译性能为代价，换来了代码的简洁和强大。
+
+```rust
+fn main() {
+    let s = MyBox::new(String::from("hello, world"));
+    //方法调用会自动解引用，Deref会进行连续的隐式转换
+    //String -> &String -> &str
+    let s2: String = s.to_string();	
+}
+```
+
+
+
+### 引用归一化
+
+Rust 会在解引用时自动把智能指针和 `&&&&v` 做引用归一化操作，转换成 `&v` 形式，最终再对 `&v` 进行解引用，源码说的很明白：
+
+```rust
+impl<T: ?Sized> Deref for &T {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        *self
+    }
+}
+```
+
+
+
+### 三种 Deref 转换
+
+- 当 `T: Deref<Target=U>`，可以将 `&T` 转换成 `&U`，也就是我们之前看到的例子
+- 当 `T: DerefMut<Target=U>`，可以将 `&mut T` 转换成 `&mut U`
+- 当 `T: Deref<Target=U>`，可以将 `&mut T` 转换成 `&U`
+
+
+
+## Drop释放资源
+
+类似于c++的析构函数，他会在变量离开作用域时自动插入代码，释放资源。
+
+### 实现Drop特征
+
+如果为某一个结构体实现`Drop`特征，会在释放资源之前先执行一遍`drop`代码块中的内容。
+
+```rust
+struct Foo;
+
+impl Drop for Foo {
+    fn drop(&mut self) {
+        println!("Dropping Foo!");
+    }
+}
+```
+
+
+
+### 手动回收资源
+
+当我们想提前释放锁、文件描述符或管道时，就需要手动释放资源。
+
+调用`drop()`函数，他会在释放资源的同时取走所有权。
+
+```rust
+fn main() {
+    let foo = Foo;
+    drop(foo);
+    // 以下代码会报错：借用了所有权被转移的值
+    // println!("Running!:{:?}", foo);
+}
+```
+
+
+
+### 互斥的 Copy 和 Drop
+
+我们无法为一个类型同时实现 `Copy` 和 `Drop` 特征。因为实现了 `Copy` 特征的类型会被编译器隐式的复制，因此非常难以预测析构函数执行的时间和频率。因此这些实现了 `Copy` 的类型无法拥有析构函数。
+
+
+
+## Rc 与 Arc
+
+当一个值需要被多个对象使用时，rust的所有权机制就会很棘手。通过引用计数的方式，rust允许一个数据资源在同一时刻拥有多个所有者。这种实现机制就是 `Rc` 和 `Arc`，**前者适用于单线程，后者适用于多线程**。
+
+
+
+### 引用计数`Rc<T>`
+
+`Rc` 正是**引用计数(reference counting)**的英文缩写。当我们**希望在堆上分配一个对象供程序的多个部分使用且无法确定哪个部分最后一个结束时，就可以使用 `Rc` 成为数据值的所有者**，
+
+智能指针 `Rc<T>` 在创建和克隆时，会将引用计数加 1；当智能指针被释放锁，引用计数减 1；引用计数归零时，就代表该数据不再被使用，因此可以被清理释放。
+
+`Rc<T>` 是指向底层数据的不可变的引用，因此你无法通过它来修改数据，需要配合后面章节的内部可变性 `RefCell` 或互斥锁 `Mutex`。
+
+```rust
+use std::rc::Rc;
+fn main() {
+    let a = Rc::new(String::from("hello, world"));
+    let b = Rc::clone(&a);	//clone是浅拷贝，仅拷贝栈上的智能指针
+
+    assert_eq!(2, Rc::strong_count(&a));	//strong_count会返回当前引用计数
+    assert_eq!(Rc::strong_count(&a), Rc::strong_count(&b))
+}
+```
+
+
+
+### Arc
+
+`Arc` 是 `Atomic Rc` 的缩写，顾名思义：原子化的 `Rc<T>` 智能指针。`Arc`实现了`Send`和`Sync`特征，保证数据在多线程环境下安全的传播。它的用法和`Rc`相同，特点是用性能损耗换来线程安全。
+
+```rust
+use std::sync::Arc;
+use std::thread;
+
+fn main() {
+    let s = Arc::new(String::from("多线程漫游者"));
+    for _ in 0..10 {
+        let s = Arc::clone(&s);
+        let handle = thread::spawn(move || {
+           println!("{}", s)
+        });
+    }
+}
+```
+
+
+
+## Cell 和 RefCell
+
+ Rust 提供了 `Cell` 和 `RefCell` 用于内部可变性，简而言之，可以在拥有不可变引用的同时修改目标数据。
+
+### Cell
 
 
 
