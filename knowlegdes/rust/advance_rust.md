@@ -1,3 +1,268 @@
+# 函数式编程
+
+## 闭包Closure
+
+闭包是**一种匿名函数，它可以赋值给变量也可以作为参数传递给其它函数，不同于函数的是，它允许捕获调用者作用域中的值**
+
+````rust
+fn main() {
+	let x = 1;
+    
+    //入参y, 捕获了作用域中的x的值
+    //sum就是闭包函数本身，而非其返回值
+    let sum = |y| x + y; 
+    assert_eq!(3, sum(2));
+}
+````
+
+闭包的形式定义：
+
+```rust
+|param1, param2,...| {
+    语句1;
+    语句2;
+    返回表达式
+}
+//如果只有一个返回表达式：
+|param1| 返回表达式
+```
+
+闭包的类型标注：
+
+如果不对闭包显式标注类型，编译器就会自动推导。**当编译器推导出一种类型后，它就会一直使用该类型**。
+
+```rust
+fn  add_one_v1   (x: u32) -> u32 { x + 1 }
+//以下的闭包和上面的函数实现功能是相同的
+let add_one_v2 = |x: u32| -> u32 { x + 1 };
+let add_one_v3 = |x|             { x + 1 };
+let add_one_v4 = |x|               x + 1  ;
+```
+
+
+
+### 结构体中的闭包
+
+```rust
+struct Cacher<T, E> 
+where 
+	T : fn(E) -> E,	//这是一种对闭包类型的约束
+{
+	query: T,
+    value: Option<E>,
+}
+
+impl<T,E> Cacher<T,E>
+where
+	T: fn(E) -> E,
+{
+	fn new(query: T) -> Cacher<T> {
+		Cacher{
+            query,
+            value: None,
+        }
+    }
+    
+    fn value(&mut self, arg: E) -> E {
+		match self.value {
+		   Some(v) => v,
+            None => {
+            	let v = (self.query)(arg);
+                 self.value = Some(v);
+                 v
+            }
+        }
+    }
+}
+```
+
+有关闭包的知识比较繁杂，等用到后再进行学习。=
+
+
+
+## 迭代器Iterator
+
+迭代器允许我们迭代一个连续的集合，例如数组、动态数组 `Vec`、`HashMap` 等，在此过程中，只需关心集合中的元素如何处理，而无需关心如何开始、如何结束、按照什么样的索引去访问等问题。
+
+在Rust中，**迭代器初始化是惰性的**，创建迭代器不会有任何性能损耗，其中的元素也不会被消耗。
+
+我们使用迭代器遍历数组：
+
+```rust
+fn main() {
+	let arr = [1,2,3];
+    //arr不是迭代器，但它实现了IntoIterator特征，rust自动在for循环中将其转换为迭代器
+    for v in arr {
+        println!("{}",v);
+    }
+}
+```
+
+
+
+### Iterator特征
+
+`Iterator` 就是迭代器特征，只有实现了它才能称为迭代器，才能调用 `next`。
+
+`next`方法可以**消耗性的**获取迭代器中的元素，返回的是 `Option` 类型。
+
+```rust
+pub trait Iterator {
+    type Item;
+
+    fn next(&mut self) -> Option<Self::Item>;
+
+    // 省略其余有默认实现的方法
+}
+```
+
+
+
+**手动遍历迭代器实现for循环**：
+
+手动迭代必须将迭代器声明为 `mut` 可变，因为调用 `next` 会改变迭代器其中的状态数据
+
+```rust
+let values = vec![1,2,3];
+{
+	let result = match Iterator::into_iter(values) {
+		mut iter => loop{
+            match iter{
+		   	   Some(x) => { x }, 
+                None => break,
+            }
+        }
+    };
+    result
+}
+```
+
+
+
+### IntoIterator特征
+
+如果一个类型实现了`IntoIterator`特征，它就可以通过调用`into_iter()`将其转换为迭代器。好在迭代器自身也实现了该特征，调用`into_iter()`它会返回它本身。
+
+**`into_iter, iter, iter_mut`方法的区别**：
+
+- `into_iter` 会夺走所有权
+- `iter` 是借用
+- `iter_mut` 是可变借用
+
+对一个集合类型调用上述方法，返回的是**单个**实现了 `Iterator` 特征的迭代器对象，而非一个迭代器的集合。链是调用时，每个适配器返回一个新的迭代器，包裹住前一个，形成嵌套链。
+
+示例给的很清楚：
+
+```rust
+fn main() {
+    let values = vec![1, 2, 3];
+
+    for v in values.into_iter() {
+        println!("{}", v)
+    }
+
+    // 下面的代码将报错，因为 values 的所有权在上面 `for` 循环中已经被转移走
+    // println!("{:?}",values);
+
+    let values = vec![1, 2, 3];
+    let _values_iter = values.iter();
+
+    // 不会报错，因为 values_iter 只是借用了 values 中的元素
+    // 调用 next 方法返回的类型是 Some(&T)
+    println!("{:?}", values);
+
+    let mut values = vec![1, 2, 3];
+    // 对 values 中的元素进行可变借用
+    let mut values_iter_mut = values.iter_mut();
+
+    // 取出第一个元素，并修改为0
+    // 调用 next 方法返回的类型是 Some(&mut T)
+    if let Some(v) = values_iter_mut.next() {
+        *v = 0;
+    }
+
+    // 输出[0, 2, 3]
+    println!("{:?}", values);
+```
+
+
+
+### 消费者与适配器
+
+ 消费者是迭代器上的方法，它会消费掉迭代器中的元素，然后返回其类型的值。消费者都依赖`next()`实现，这也是为什么迭代器要实现 `Iterator` 特征，而该特征必须要实现 `next` 方法的原因。
+
+**消费者适配器**：
+
+只要迭代器上的某个方法 `A` 在其内部调用了 `next` 方法，那么 `A` 就被称为**消费者适配器**，所以方法 `A` 的调用也会消耗掉迭代器上的元素。但**next本身不是消费者适配器**。
+
+**迭代器适配器**：
+
+迭代器适配器会返回一个新的迭代器。迭代器适配器是惰性的，意味着你**需要一个消费者适配器来收尾，最终将迭代器转换成一个具体的值**：
+
+输入迭代器输出迭代器，这是链式调用的关键。
+
+```rust
+let v1: Vec<i32> = vec![1,2,3];
+//闭包可以作为适配器参数
+//collect是消费者适配器
+let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
+assert_eq!(v2, vec![2,3,4]);
+```
+
+**collect**：
+
+该方法就是一个消费者适配器，使用它可以将一个迭代器中的元素收集到指定类型中。`collect`在消费时必须**显式指定类型**。
+
+```rust
+use std::collections::HashMap;
+fn main() {
+    let names = ["sunface", "sunfei"];
+    let ages = [18, 18];
+    let folks: HashMap<_, _> = names.into_iter().zip(ages.into_iter()).collect();
+
+    println!("{:?}",folks);
+}
+```
+
+
+
+### 实现Iterator特征
+
+为了实现Iterator特征，我们需要手动实现`next`方法，其他方法都有默认实现。**只要实现了Iterator特征，该类型变量就是一个迭代器**。
+
+```rust
+struct Counter {
+	counter: u32,
+}
+
+impl Iterator for Counter {
+	type Item = u32;
+    fn next(&mut self) -> Option<Self::Item> {
+		if self.count < 5 {
+			self.count += 1;
+        	Some(self.count)
+        }else { None }
+    }
+}
+```
+
+
+
+### 惰性迭代器链式处理示例
+
+迭代器是 Rust 的 **零成本抽象**（zero-cost abstractions）之一，意味着抽象并不会引入运行时开销，接下来的代码在执行过程中没有申请额外的内存空间：
+
+```rust
+let v = vec![1u64, 2, 3, 4, 5, 6];
+let val = v.iter()	//生成不可变借用的迭代器
+    .enumerate() //给流中的每个元素绑定一个从 0 开始的索引
+    .filter(|&(idx, _)| idx % 2 == 0) //筛选器。保留索引为偶数的元素。
+    .map(|(_, val)| val) //转换器。把元组“剥开”，只留下数值本身。
+    .fold(0u64, |sum, acm| sum + acm); //消费者，累加求和
+
+println!("{}", val);
+```
+
 # 智能指针
 
 ## `Box<T>`堆对象分配
@@ -299,6 +564,76 @@ fn main() {
  Rust 提供了 `Cell` 和 `RefCell` 用于内部可变性，简而言之，可以在拥有不可变引用的同时修改目标数据。
 
 ### Cell
+
+`Cell<T>` 适用于 `T` 实现 `Copy` 的情况：
+
+- `c.get` 用来取值，`c.set` 用来设置新值。
+
+```rust
+use std::cell::Cell;
+fn main() {
+    let c = Cell::new("kskbl");
+    let one = c.get();
+    c.set("zdjd");
+    let two = c.get();
+    println!("{},{}", one, two);
+}
+```
+
+
+
+###  RefCell
+
+和Cell类似但不限定Copy特征，且能正常通过编译，但会在运行时panic。
+
+**`RefCell`用在你确信代码是正确的，而编译器发生误判的情况**。这通常是个问题，但也可以借用该机制修改复杂的借用关系。
+
+```rust
+use std::cell:RefCell;
+
+fn main() {
+	let s = RefCell::new(String::form("hello world"));
+    let s1 = s.borrow();
+    let s2 = s.borrow_mut();
+    println!("{}, {}", s1, s2);
+}
+```
+
+
+
+### Cell和RefCell的性能比较
+
+- `Cell` 只适用于 `Copy` 类型，用于提供值，而 `RefCell` 用于提供引用
+
+- `Cell` 不会 `panic`，而 `RefCell` 会
+
+  当非要使用内部可变性时，首选 `Cell`，只有你的类型没有实现 `Copy` 时，才去选择 `RefCell`
+
+
+
+### Rc+RefCell的组合使用
+
+这是一种常见组合，前者实现一个数据拥有多个所有者，后者可以实现数据的可变性。这种写法性能很高，对内存和`cpu`的损耗非常低：
+
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+fn main() {
+	let s = Rc::new(RefCell::new("hello"));
+    
+    let s1 = s.clone();
+    let s2 = s.clone();
+    
+    s2.borrow_mut().push_str(" world");
+    
+    println!("{:?}\n{:?}\n{:?}"s, s1, s2);
+}
+
+//输出结果:
+//hello world
+//hello world
+//hello world
+```
 
 
 
