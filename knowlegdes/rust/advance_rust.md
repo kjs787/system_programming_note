@@ -828,6 +828,89 @@ fn main() {
 
 
 
+### 使用thread::Builder构建线程
+
+`std::thread::Builder`是rust标准库中的线程配置器，采用了一种叫做**构建器模式 (Builder Pattern)**的设计，允许你通过链式调用的方式清晰地配置线程。
+
+特点是可以为线程命名和自定义栈大小：
+
+```rust
+use std::thread;
+
+fn main(){
+	//设置线程名和栈大小
+    let builder = thread::Builder::new().name("thread_name".into()).stack_size(128 * 1024);
+    
+     //线程执行闭包中的代码
+     //返回类型为io::Result<JoinHandle<T>>，允许更优雅的错误处理
+    let handle = builder.spawn(||{
+     	println!("hello world!");
+        42	//返回值
+    }).unwrap();
+    
+      //获取线程返回值
+    let result = handle.join().unwrap();
+}
+```
+
+
+
+### 作用域线程 scope thread
+
+`std::thread::scope` 提供了一种“强制同步屏障”。编译器保证：**只要在这个作用域里创建的子线程，它们一定在作用域结束前全部执行完毕。**可以直接**借用（borrow）**父线程的局部变量，而无需 `move` 或 `Arc`，解决变量生命周期问题。
+
+```rust
+use std::thread;
+
+fn main() {
+	let a = vec![1,2,3];
+    let b = vec![4,5,6];
+    let (sum_a, sum_b) = thread::scope(|s|{
+        let h1 = s.spawn(||{a.iter().sum::<i32>()});
+        let h2 = s.spawn(||{b.iter().sum::<i32>()});
+        (h1.join().unwrap(), h2.join().unwrap())
+    });
+}
+```
+
+
+
+### thread_local! 宏
+
+为每个线程单独维护一个变量副本，互不影响，不需要加锁。
+
+1. **日志和追踪系统**：你需要为每个请求或每个线程生成一个唯一的追踪 ID（Trace ID），在日志输出时附带这个 ID，这样即使多个线程同时打印日志，你也能分清哪些日志属于同一个处理流程。
+2. **线程专属的缓存/缓冲区**：避免多个线程频繁申请和释放小内存，每个线程维护一个自己的小缓存池，提升性能。
+3. **替代全局可变状态**：在某些单线程模型或异步运行时中，用来安全地存储当前上下文的运行时信息，而不需要使用全局锁
+
+```rust
+use std::thread;
+
+// 定义了一个名为 THREAD_ID 的线程本地变量，类型为 RefCell<usize>
+// 每个线程都会拥有自己独立的 RefCell<usize>，且初始值为 0
+thraed_local! {
+    static THREAD_ID = RefCell::new(0);
+}
+
+fn main（） {
+    //通过闭包访问和修改
+    THREAD_ID.with(|id| {
+        *id.mut_borrow() = 1;
+        println!("id_value: {}", *id.borrow()); //1
+    });
+    
+    //子线程
+    thread::spawn(||{
+        THREAD_ID.with(|id| *id.mut_borrow() = 2;);
+        println!("id_value: {}", *id.borrow()); //2
+    });
+}
+```
+
+
+
+
+
 ## 线程间传递消息
 
 rust引入消息通道`channel`的概念，发送者通过channel将消息发送给接收者。
@@ -1295,4 +1378,561 @@ fn main() {
     t.join().unwrap();
 }
 ```
+
+
+
+## 子进程和IPC
+
+### 创建子进程
+
+使用`std::process::Command`灵活的创建子进程，根据配置不同返回不同的结果。
+
+```rust
+use std::process::{Command, Stdio};
+use std::io::Write;
+
+fn main() {
+	//1.捕获子进程输出，底层自动帮你创建了管道（pipes），在内部完成了子进程的等待（waitpid）。
+    let output = Command::new("echo").args("hello world!").output().ecpect("Command output error!");
+	
+    //2.手动与子进程交互
+    //spawn可以返回
+	let child = Command::new("echo").stdin(Stdio::piped()).stdout(Stdio.piped()).spawn().unwrap();
+    {
+        //提取句柄,离开作用域会自动drop掉stdin，关闭管道
+     	let stdin = child.stdin.as_mut().unwrap();
+   		stdin.write_all(b"hello\n").unwrap();
+    } 
+	// 读取输出
+	let output = child.stdout.as_mut().unwrap();
+    //等待子进程结束，防止出现僵尸进程。
+    let _status = child.wait().unwrap();
+    
+    
+    //3.配置环境变量
+    let output = Command::new("printenv")
+    .arg("APP_ENV")
+    .env("APP_ENV", "production") // 只给子进程添加 APP_ENV=production
+    .current_dir("/tmp")          // 改变子进程的工作目录
+    .output()
+    .expect("Failed to execute");
+
+	let env_val = String::from_utf8_lossy(&output.stdout);
+	println!("子进程看到的 APP_ENV: {}", env_val.trim());
+}
+```
+
+因为只有写管道关闭读管道才会解除阻塞。所以在读数据之前确保所有的stdout都可以被drop掉，否则会出现死锁。
+
+
+
+### 对执行结果进行错误处理
+
+```rust
+pub fn run_command_with_result(program: &str, args: &[&str]) -> io::Result<String> {
+    //tring::from_utf8有可能会出错
+    //如果错误就返回io::Error类型的错误
+    let output =  Command::new(program).args(args).stdout(Stdio::piped()).output()?;
+    match String::from_utf8(output.stdout) {
+        Ok(str) => Ok(str),
+        Err(e) => Err(io::Error::new(std::io::ErrorKind::InvalidData, e)),
+        
+    }
+}
+
+//下面的写法也行
+fn run_command_with_result() -> Result<String, io::Error> {
+    let output = Command::new("non_existent_program") // 故意写错或者是存在的程序
+        .output()?; // '?' 操作符：如果 spawn 失败，直接返回 Err；如果成功，继续
+
+    if output.status.success() {
+        Ok(String::from_utf8_lossy(&output.stdout).to_string())
+    } else {
+        // 如果程序运行了但报错了（比如 ls 了一个不存在的文件）
+        Err(io::Error::new(io::ErrorKind::Other, "Command failed"))
+    }
+}
+```
+
+
+
+# rust内联汇编
+
+## 内联汇编的基本组成
+
+Rust 内联汇编用的是 `core::arch::asm!`，它的整体结构可以拆成四部分：**模板字符串 + 操作数 + clobber + options**。
+
+```rust
+let x: u64 = 3;
+let y: u64;
+
+unsafe {
+    core::arch::asm!(
+        "add {0}, 5",	//模板字符串，就是插入的汇编代码，不同架构汇编指令是不同的
+        inout(reg) x => y,	//带入位置参数0，inout是操作数，reg是指定的寄存器，
+    );
+}
+// y == 8
+```
+
+
+
+可以为位置参数起名字，在之后进行赋值：
+
+```rust
+
+unsafe {
+    core::arch::asm!(
+        "add {val}, 5",
+        val = inout(reg) x => y,
+    );
+}
+// y == 8
+```
+
+
+
+可使用的**操作数**：
+
+```rust
+in(reg) expr           // 输入：把 Rust 表达式放进一个通用寄存器
+out(reg) var           // 输出：汇编结束后，从这个寄存器写回 var
+out(reg) _             // 丢弃输出：寄存器被写了，但 Rust 不关心结果
+inout(reg) var         // 输入输出：同一个寄存器既是输入也是输出
+inout(reg) in_var => out_var  // 输入和输出可以是不同变量
+inlateout(reg) var     // 晚写输出：保证所有输入读完之后才写输出
+```
+
+可以指定具体寄存器：
+```rust
+in("a0") value
+out("ra") ret
+inlateout("sp") sp
+```
+
+### 
+
+clobber 用来告诉编译器：**这段汇编还破坏了哪些状态。**
+options 用来告诉编译器：**这段汇编有什么特殊行为。**
+
+**常用option：**
+
+指定option可以让编译器更好的优化代码
+
+| option            | 含义                      |
+| :---------------- | :------------------------ |
+| `preserves_flags` | 汇编没有修改条件标志      |
+| `nostack`         | 没有往栈上 push / 修改 sp |
+| `nomem`           | 不读写内存                |
+| `readonly`        | 只读内存，不写            |
+| `pure`            | 无副作用，输出只依赖输入  |
+| `noreturn`        | 不会返回，比如直接跳转走  |
+| `att_syntax`      | x86 上使用 AT&T 语法      |
+
+
+
+## niked_asm!宏和裸函数
+
+`naked_asm!` 是 Rust 1.88 稳定下来的宏，专门配合 `#[unsafe(naked)]` 裸函数使用。它的核心作用就是：**让函数体完全由你写的汇编指令组成，编译器不插入任何 prologue / epilogue。**
+
+关键限制：**`naked_asm!` 里不能用 `in(reg) old` 这种操作数绑定。**函数参数只能通过 ABI 约定的寄存器位置来访问。RISC-V 64 的 calling convention 里，第一个参数在 `a0/x10`，第二个在 `a1/x11`，所以用 `a0、a1` 占位即可。
+
+在裸函数中，编译器不会为函数添加额外指令，你需要手动管理上下文。
+
+```rust
+#[unsafe(naked)]
+pub unsafe fn switch_context(old: &mut TaskContext, new: &TaskContext) {
+    naked_asm!(
+        "sd ra, 0(a0)",
+        "sd sp, 8(a0)",
+        "ld ra, 0(a1)",
+        "ld sp, 8(a1)",
+        "mv a0, x0",
+        "mv a1, x0",
+        "ret",
+    );
+}
+```
+
+**注意事项:**
+
+- 必须标记 `unsafe`，因为跳过了编译器的 ABI 安全网。
+
+- 函数签名只是给 Rust 调用方看的，汇编里不自动处理参数传递。
+
+- 必须自己写 `ret`（或等价跳转），否则函数不会返回。
+
+- 建议写清晰的 SAFETY 注释，说明遵循的 ABI、寄存器约定、被破坏的寄存器等。
+
+  
+
+# 异步编程
+
+## async/await简单入门
+
+引入`futures`包:
+
+```tex
+[dependencies]
+futures = "0.3"
+```
+
+
+
+创建异步函数：
+```rust
+//异步函数会返回Future
+async fn do_something() {
+	prineln!("lets goooo!");
+}                          
+```
+
+
+
+返回的Futures不能直接运行。需要执行器`executor`配合使用：
+```rust
+use futures::executor::block_on;
+
+async fn hello_world() {
+	println!("hello world!");
+}
+
+fn main() {
+	let future = hello_world(); //获取Future
+    block_on(future);	//执行`Future`并等待运行完成,block_on会阻塞当前线程
+}
+```
+
+
+
+**使用`.await`同步异步函数：**
+
+​	`.await`不会只是当前线程，而是异步等待`Future A`完成，等待过程中，还可以执行其他Future，最终实现并发处理。他是异步编程的重要组成部分，让一个线程内实现多任务。
+
+```rust
+use futures::executor::block_on;
+async fn hello_world() {
+	hello_cat().await;
+    println!("hello world");
+}
+
+async fn hello_cat() {
+	 println!("hello world");
+}
+
+fn main() {
+    let future = hello_world();
+    block_on(future);
+}
+```
+
+
+
+## Future特征
+
+### Future的实现原理
+
+`	Future` 的定义：它是一个能产出值的异步计算。以下是简化版Future的代码：
+
+```rust
+trait SimpleFuture {
+    type Output;
+    fn poll(&mut self, wake: fn()) -> Poll<Self::Output>;
+}
+
+enum Poll<T> {
+    Ready(T),
+    Pending,
+}
+```
+
+​	若在当前 轮询`poll` 中， `Future` 可以被完成，则会返回 `Poll::Ready(result)` ，反之则返回 `Poll::Pending`， 并且安排一个 `wake` 函数：当未来 `Future` 准备好进一步执行时， 该函数会被调用，然后管理该 `Future` 的执行器(例如上一章节中的`block_on`函数)会再次调用 `poll` 方法，此时 `Future` 就可以继续执行了。
+
+这种接到通知再执行的方式，比对所有Future定期遍历更加高效。
+
+
+
+**如何同时运行多个 `Future`：**
+
+```rust
+trait SimpleFuture {
+    type Output;
+    fn poll(&mut self, wake: fn()) -> Poll<Self::Output>;
+}
+
+enum Poll<T> {
+    Ready(T),
+    Pending,
+}
+
+/// 一个SimpleFuture，它会并发地运行两个Future直到它们完成
+///
+/// 之所以可以并发，是因为两个Future的轮询可以交替进行，一个阻塞，另一个就可以立刻执行，反之亦然
+pub struct Join<FutureA, FutureB> {
+    // 结构体的每个字段都包含一个Future，可以运行直到完成.
+    // 等到Future完成后，字段会被设置为 `None`. 这样Future完成后，就不会再被轮询
+    a: Option<FutureA>,
+    b: Option<FutureB>,
+}
+
+impl<FutureA, FutureB> SimpleFuture for Join<FutureA, FutureB>
+where
+    FutureA: SimpleFuture<Output = ()>,
+    FutureB: SimpleFuture<Output = ()>,
+{
+    type Output = ();
+    fn poll(&mut self, wake: fn()) -> Poll<Self::Output> {
+        // 尝试去完成一个 Future `a`
+        if let Some(a) = &mut self.a {
+            if let Poll::Ready(()) = a.poll(wake) {
+                self.a.take();	//Future运行完成，设置为None
+            }
+        }
+
+        // 尝试去完成一个 Future `b`
+        if let Some(b) = &mut self.b {
+            if let Poll::Ready(()) = b.poll(wake) {
+                self.b.take();
+            }
+        }
+
+        if self.a.is_none() && self.b.is_none() {
+            // 两个 Future都已完成 - 我们可以成功地返回了
+            Poll::Ready(())
+        } else {
+            // 至少还有一个 Future 没有完成任务，因此返回 `Poll::Pending`.
+            // 当该 Future 再次准备好时，通过调用`wake()`函数来继续执行
+            Poll::Pending
+        }
+    }
+}
+```
+
+
+
+**使用 `Future` 特征去表达异步控制流（简化版本）：**
+
+```rust
+/// 一个SimpleFuture, 它使用顺序的方式，一个接一个地运行两个Future
+//
+// 注意: 由于本例子用于演示，因此功能简单，`AndThenFut` 会假设两个 Future 在创建时就可用了.
+// 而真实的`Andthen`允许根据第一个`Future`的输出来创建第二个`Future`，因此复杂的多。
+pub struct AndThenFut<FutureA, FutureB> {
+    first: Option<FutureA>,
+    second: FutureB,
+}
+
+impl<FutureA, FutureB> SimpleFuture for AndThenFut<FutureA, FutureB>
+where
+    FutureA: SimpleFuture<Output = ()>,
+    FutureB: SimpleFuture<Output = ()>,
+{
+    type Output = ();
+    fn poll(&mut self, wake: fn()) -> Poll<Self::Output> {
+        if let Some(first) = &mut self.first {
+            match first.poll(wake) {
+                // 我们已经完成了第一个 Future， 可以将它移除， 然后准备开始运行第二个
+                Poll::Ready(()) => self.first.take(),
+                // 第一个 Future 还不能完成
+                Poll::Pending => return Poll::Pending,
+            };
+        }
+
+        // 运行到这里，说明第一个Future已经完成，尝试去完成第二个
+        self.second.poll(wake)
+    }
+}
+```
+
+
+
+### pin特性
+
+```rust
+trait Future {
+    type Output;
+    fn poll(
+        // 首先值得注意的地方是，`self`的类型从`&mut self`变成了`Pin<&mut Self>`:
+        self: Pin<&mut Self>,
+        // 其次将`wake: fn()` 修改为 `cx: &mut Context<'_>`:
+        cx: &mut Context<'_>,
+    ) -> Poll<Self::Output>;
+}
+```
+
+`pin`会创建一个无法被移动的`Future`，他有固定的内存地址，意味着可以通过存储指针进行访问。
+
+其次，从 `wake: fn()` 变成了 `&mut Context<'_>` 。意味着 `wake` 函数可以携带数据了，他让Future的管理变得更加简单。
+
+
+
+### 使用Waker唤醒任务
+
+我们创建一个简单的定时器`Future`：
+
+```rust
+//引入需要的包
+use std::{
+    future::Future,
+    pin::Pin,
+    sync::{Arc, Mutex},
+    task::{Context, Poll, Waker},
+    thread,
+    time::Duration,
+};
+```
+
+定义数据结构`TimeFuture`，因为他需要在新线程和Future定时器中共享，使用`Arc<Mutex<Y>>`共享状态
+
+```rust
+pub struct TimerFuture {
+    shared_state: Arc<Mutex<SharedState>>,
+}
+
+/// 在Future和等待的线程间共享状态
+struct SharedState {
+    /// 定时(睡眠)是否结束
+    completed: bool,
+
+    /// 当睡眠结束后，线程可以用`waker`通知`TimerFuture`来唤醒任务
+    waker: Option<Waker>,
+}
+```
+
+实现Futrue特征：
+
+```rust
+impl Future for TimerFuture {
+    type Output = ();
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        // 通过检查共享状态，来确定定时器是否已经完成
+        let mut shared_state = self.shared_state.lock().unwrap();
+        if shared_state.completed {
+            Poll::Ready(())
+        } else {
+            // 设置`waker`，这样新线程在睡眠(计时)结束后可以唤醒当前的任务，接着再次对`Future`进行`poll`操作,
+            //
+            // 下面的`clone`每次被`poll`时都会发生一次，实际上，应该是只`clone`一次更加合理。
+            // 选择每次都`clone`的原因是： `TimerFuture`可以在执行器的不同任务间移动，如果只克隆一次，
+            // 那么获取到的`waker`可能已经被篡改并指向了其它任务，最终导致执行器运行了错误的任务
+            shared_state.waker = Some(cx.waker().clone());
+            Poll::Pending
+        }
+    }
+}
+```
+
+再来创建一个 API 用于构建定时器和启动计时线程:
+
+```rust
+impl TimerFuture {
+    /// 创建一个新的`TimerFuture`，在指定的时间结束后，该`Future`可以完成
+    pub fn new(duration: Duration) -> Self {
+        let shared_state = Arc::new(Mutex::new(SharedState {
+            completed: false,
+            waker: None,
+        }));
+
+        // 创建新线程
+        let thread_shared_state = shared_state.clone();
+        thread::spawn(move || {
+            // 睡眠指定时间实现计时功能
+            thread::sleep(duration);
+            let mut shared_state = thread_shared_state.lock().unwrap();
+            // 通知执行器定时器已经完成，可以继续`poll`对应的`Future`了
+            shared_state.completed = true;
+            if let Some(waker) = shared_state.waker.take() {
+                waker.wake()
+            }
+        });
+
+        TimerFuture { shared_state }
+    }
+}
+```
+
+​	有了定时器，我们需要配合执行器让Future动起来。
+
+
+
+### 执行器Executor
+
+```rust
+[dependencies]
+futures = "0.3"
+```
+
+```rust
+use {
+    futures::{
+        future::{BoxFuture, FutureExt},
+        task::{waker_ref, ArcWake},
+    },
+    std::{
+        future::Future,
+        sync::mpsc::{sync_channel, Receiver, SyncSender},
+        sync::{Arc, Mutex},
+        task::{Context, Poll},
+        time::Duration,
+    },
+    // 引入之前实现的定时器模块
+    timer_future::TimerFuture,
+};
+```
+
+
+
+
+
+
+
+
+
+## Pin和Unpin
+
+### 深入理解Pin
+
+pin是一个结构体，它包裹一个指针，能够保证该指针指向的数据不被移动。自引用数据结构的值是不能被移动的。有趣的是，被pin住的值都必须是`!Unpin`的。
+
+```rust
+pub struct Pin<P> {
+    pointer: P,
+}
+```
+
+
+
+使用下面的例子理解为什么被pin的指针可以保持不变。
+
+```rust
+#[derive(Debug)]
+struct Test {
+    a: String,
+    b: *const String,
+}
+
+fn main() {
+    let mut test1 = Test::new("test1");
+    test1.init();
+    let mut test2 = Test::new("test2");
+    test2.init();
+
+    println!("a: {}, b: {}", test1.a(), test1.b());
+    std::mem::swap(&mut test1, &mut test2);
+    println!("a: {}, b: {}", test2.a(), test2.b());
+}
+```
+
+```text
+//text1 -> a: test1, b: test1
+//text2 -> a: test1, b: test2
+```
+
+![img](https://pica.zhimg.com/80/v2-eaeb33da283dc1063b862d2307821976_1440w.jpg)
+
+由上面的例子可以看到，指针确实被转移了，但指针指向的地址不变，取出来的值就是固定地址的值。
+
+
+
+## 异步运行时tokio
 
